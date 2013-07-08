@@ -1,8 +1,173 @@
 @import "compass/reset";
 @import "compass";
 
+@font-face{
+  font-family: 'brandon_grotesqueblack';
+  src: url('../assets/fonts/brandon_blk-webfont.eot');
+  src: url('../assets/fonts/brandon_blk-webfont.eot') format('embedded-opentype'),
+  url('../assets/fonts/brandon_blk-webfont.woff') format('woff'),
+  url('../assets/fonts/brandon_blk-webfont.ttf') format('truetype'),
+  url('../assets/fonts/brandon_blk-webfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face{
+  font-family: 'brandon_grotesquemedium';
+  src: url('../assets/fonts/brandon_reg-webfont.eot');
+  src: url('../assets/fonts/brandon_reg-webfont.eot') format('embedded-opentype'),
+  url('../assets/fonts/brandon_reg-webfont.woff') format('woff'),
+  url('../assets/fonts/brandon_reg-webfont.ttf') format('truetype'),
+  url('../assets/fonts/brandon_reg-webfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body{
   margin:0;
   border: 0;
   padding: 0;
+  background-color: #fff;
+  background-image: url('../assets/textures/default.jpg');
+  background-repeat: repeat;
+  font-family: brandon_grotesqueblack, Helvetica, sans-serif;
+  text-transform: uppercase;
+
+  header{
+    background-repeat: repeat;
+    background-image: url('../assets/textures/header.jpg');
+    width: 100%;
+    height: 133px;
+
+    -webkit-box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, .3);
+    -moz-box-shadow:0px 4px 10px 0px rgba(0, 0, 0, .3);
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, .3);
+    #header_content{
+      cursor: pointer;
+      width: 834px;
+      height: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 190px;
+      padding-top: 20px;
+      background-image: url('../assets/header.jpg');
+      background-repeat: no-repeat;
+      background-position: top center;
+
+      img{
+        float: left;
+      }
+
+      hgroup{
+        height: 100%;
+
+        h1{
+          color: #dc006e;
+          font-size: 50pt;
+          margin-top: 10px;
+          margin-left: 18px;
+          float: left;
+        }
+
+        h2{
+          font-family: brandon_grotesquemedium;
+          color: #48a9c2;
+          font-weight: lighter;
+          font-size: 40pt;
+          height: 100%;
+          float: left;
+          margin-top: 17px;
+          margin-left: 10px;
+        }
+
+        #be{
+          margin-left: 3px;
+        }
+      }
+    }
+  }
+
+  .gas, .electricity{
+    width: 100%;
+    height: 224px;
+    .gas_content{
+      background: url('../assets/gas/flames.png') no-repeat, url('../assets/textures/gas.jpg') repeat;
+      background-position: 0px -200px, 0px 0px;
+      h3{
+        color: #821c00;
+        background: url('../assets/gas/icon.png') no-repeat, url('../assets/gas/underline.png') repeat-x;
+      }
+    }
+    .electricity_content{
+      background: url('../assets/electricity/thunderstruck.png') no-repeat, url('../assets/textures/electricity.jpg') repeat;
+      background-position: 50% -110px, 0px 0px;
+      h3{
+        color: #002E36;
+        background: url('../assets/electricity/icon.png') no-repeat, url('../assets/electricity/underline.png') repeat-x;
+      }
+    }
+    .gas_content h3{
+      padding-left: 45px;
+      width: 275px;
+    }
+    .electricity_content h3{
+      width: 335px;
+      padding-left: 45px;
+    }
+    .gas_content, .electricity_content{
+      cursor: pointer;
+      height: 143px;
+      padding-top: 70px;
+      box-shadow:inset 0 0 20px rgba(0, 0, 0, .3);
+      h3{
+        font-size: 42pt;
+        height: 85px;
+        margin-left: auto;
+        margin-right: auto;
+        background-position: 0px 4px;
+      }
+    }
+    .gas_status_bar, .electricity_status_bar{
+      width: 100%;
+      height: 11px;
+      background-color: #fff;
+      .gas_status_bar_update{
+        background-color: #821c00;
+      }
+      .electricity_status_bar_update{
+        background-color: #002E36;
+      }
+      .gas_status_bar_update, .electricity_status_bar_update{
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .gas_status_el{
+      background-image: url('../assets/gas/statusbg.png');
+    }
+    .electricity_status_el{
+      background-image: url('../assets/electricity/statusbg.png');
+    }
+    .gas_status_el, .electricity_status_el{
+      position: absolute;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      margin-left: auto;
+      margin-top: -25px;
+      margin-right: auto;
+      background-repeat: no-repeat;
+
+      img{
+        width: 16px;
+        height: 9px;
+        margin-left: 12px;
+        margin-top: 17px;
+      }
+    }
+  }
+}
+
+.hide{
+  display: none;
 }

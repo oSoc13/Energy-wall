@@ -63,9 +63,184 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 4, ../sass/screen.scss */
+@font-face {
+  font-family: 'brandon_grotesqueblack';
+  src: url("../assets/fonts/brandon_blk-webfont.eot");
+  src: url("../assets/fonts/brandon_blk-webfont.eot") format("embedded-opentype"), url("../assets/fonts/brandon_blk-webfont.woff") format("woff"), url("../assets/fonts/brandon_blk-webfont.ttf") format("truetype"), url("../assets/fonts/brandon_blk-webfont.svg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'brandon_grotesquemedium';
+  src: url("../assets/fonts/brandon_reg-webfont.eot");
+  src: url("../assets/fonts/brandon_reg-webfont.eot") format("embedded-opentype"), url("../assets/fonts/brandon_reg-webfont.woff") format("woff"), url("../assets/fonts/brandon_reg-webfont.ttf") format("truetype"), url("../assets/fonts/brandon_reg-webfont.svg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* line 26, ../sass/screen.scss */
 body {
   margin: 0;
   border: 0;
   padding: 0;
+  background-color: #fff;
+  background-image: url("../assets/textures/default.jpg");
+  background-repeat: repeat;
+  font-family: brandon_grotesqueblack, Helvetica, sans-serif;
+  text-transform: uppercase;
+}
+/* line 36, ../sass/screen.scss */
+body header {
+  background-repeat: repeat;
+  background-image: url("../assets/textures/header.jpg");
+  width: 100%;
+  height: 133px;
+  -webkit-box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.3);
+}
+/* line 45, ../sass/screen.scss */
+body header #header_content {
+  cursor: pointer;
+  width: 834px;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 190px;
+  padding-top: 20px;
+  background-image: url("../assets/header.jpg");
+  background-repeat: no-repeat;
+  background-position: top center;
+}
+/* line 57, ../sass/screen.scss */
+body header #header_content img {
+  float: left;
+}
+/* line 61, ../sass/screen.scss */
+body header #header_content hgroup {
+  height: 100%;
+}
+/* line 64, ../sass/screen.scss */
+body header #header_content hgroup h1 {
+  color: #dc006e;
+  font-size: 50pt;
+  margin-top: 10px;
+  margin-left: 18px;
+  float: left;
+}
+/* line 72, ../sass/screen.scss */
+body header #header_content hgroup h2 {
+  font-family: brandon_grotesquemedium;
+  color: #48a9c2;
+  font-weight: lighter;
+  font-size: 40pt;
+  height: 100%;
+  float: left;
+  margin-top: 17px;
+  margin-left: 10px;
+}
+/* line 83, ../sass/screen.scss */
+body header #header_content hgroup #be {
+  margin-left: 3px;
+}
+/* line 90, ../sass/screen.scss */
+body .gas, body .electricity {
+  width: 100%;
+  height: 224px;
+}
+/* line 93, ../sass/screen.scss */
+body .gas .gas_content, body .electricity .gas_content {
+  background: url("../assets/gas/flames.png") no-repeat, url("../assets/textures/gas.jpg") repeat;
+  background-position: 0px -200px, 0px 0px;
+}
+/* line 96, ../sass/screen.scss */
+body .gas .gas_content h3, body .electricity .gas_content h3 {
+  color: #821c00;
+  background: url("../assets/gas/icon.png") no-repeat, url("../assets/gas/underline.png") repeat-x;
+}
+/* line 101, ../sass/screen.scss */
+body .gas .electricity_content, body .electricity .electricity_content {
+  background: url("../assets/electricity/thunderstruck.png") no-repeat, url("../assets/textures/electricity.jpg") repeat;
+  background-position: 50% -110px, 0px 0px;
+}
+/* line 104, ../sass/screen.scss */
+body .gas .electricity_content h3, body .electricity .electricity_content h3 {
+  color: #002E36;
+  background: url("../assets/electricity/icon.png") no-repeat, url("../assets/electricity/underline.png") repeat-x;
+}
+/* line 109, ../sass/screen.scss */
+body .gas .gas_content h3, body .electricity .gas_content h3 {
+  padding-left: 45px;
+  width: 275px;
+}
+/* line 113, ../sass/screen.scss */
+body .gas .electricity_content h3, body .electricity .electricity_content h3 {
+  width: 335px;
+  padding-left: 45px;
+}
+/* line 117, ../sass/screen.scss */
+body .gas .gas_content, body .gas .electricity_content, body .electricity .gas_content, body .electricity .electricity_content {
+  cursor: pointer;
+  height: 143px;
+  padding-top: 70px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+/* line 122, ../sass/screen.scss */
+body .gas .gas_content h3, body .gas .electricity_content h3, body .electricity .gas_content h3, body .electricity .electricity_content h3 {
+  font-size: 42pt;
+  height: 85px;
+  margin-left: auto;
+  margin-right: auto;
+  background-position: 0px 4px;
+}
+/* line 130, ../sass/screen.scss */
+body .gas .gas_status_bar, body .gas .electricity_status_bar, body .electricity .gas_status_bar, body .electricity .electricity_status_bar {
+  width: 100%;
+  height: 11px;
+  background-color: #fff;
+}
+/* line 134, ../sass/screen.scss */
+body .gas .gas_status_bar .gas_status_bar_update, body .gas .electricity_status_bar .gas_status_bar_update, body .electricity .gas_status_bar .gas_status_bar_update, body .electricity .electricity_status_bar .gas_status_bar_update {
+  background-color: #821c00;
+}
+/* line 137, ../sass/screen.scss */
+body .gas .gas_status_bar .electricity_status_bar_update, body .gas .electricity_status_bar .electricity_status_bar_update, body .electricity .gas_status_bar .electricity_status_bar_update, body .electricity .electricity_status_bar .electricity_status_bar_update {
+  background-color: #002E36;
+}
+/* line 140, ../sass/screen.scss */
+body .gas .gas_status_bar .gas_status_bar_update, body .gas .gas_status_bar .electricity_status_bar_update, body .gas .electricity_status_bar .gas_status_bar_update, body .gas .electricity_status_bar .electricity_status_bar_update, body .electricity .gas_status_bar .gas_status_bar_update, body .electricity .gas_status_bar .electricity_status_bar_update, body .electricity .electricity_status_bar .gas_status_bar_update, body .electricity .electricity_status_bar .electricity_status_bar_update {
+  width: 100%;
+  height: 100%;
+}
+/* line 145, ../sass/screen.scss */
+body .gas .gas_status_el, body .electricity .gas_status_el {
+  background-image: url("../assets/gas/statusbg.png");
+}
+/* line 148, ../sass/screen.scss */
+body .gas .electricity_status_el, body .electricity .electricity_status_el {
+  background-image: url("../assets/electricity/statusbg.png");
+}
+/* line 151, ../sass/screen.scss */
+body .gas .gas_status_el, body .gas .electricity_status_el, body .electricity .gas_status_el, body .electricity .electricity_status_el {
+  position: absolute;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  margin-top: -25px;
+  margin-right: auto;
+  background-repeat: no-repeat;
+}
+/* line 161, ../sass/screen.scss */
+body .gas .gas_status_el img, body .gas .electricity_status_el img, body .electricity .gas_status_el img, body .electricity .electricity_status_el img {
+  width: 16px;
+  height: 9px;
+  margin-left: 12px;
+  margin-top: 17px;
+}
+
+/* line 171, ../sass/screen.scss */
+.hide {
+  display: none;
 }

@@ -2,13 +2,46 @@
 <html>
 <head>
     <title>Essent Statistics 2008 - 2013</title>
-    <link href="css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" />
+    <link type="image/x-icon" href="assets/favicon.ico" rel="icon">
+    <link type="image/x-icon" href="assets/favicon.ico" rel="shortcut icon">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
-        window.jQuery || document.write('<script src="js/vendor/jquery.js">"><\/script>');
+        window.jQuery || document.write('<script src="js/vendor/jquery.js"><\/script>');
     </script>
+    <script type="text/javascript" src="js/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
 </head>
 <body>
-
+    <div id="container">
+        <header>
+            <div id="header_content">
+                <img src="assets/logo.png" alt="logo"/>
+                <hgroup>
+                    <h1>Essent</h1>
+                    <h2>Statistics</h2>
+                    <h1 id="be" class="hide">.be</h1>
+                </hgroup>
+            </div>
+        </header>
+        <section class="gas">
+            <div class="gas_content">
+                <h3>Gasoline</h3>
+            </div>
+            <div class="gas_status_bar"><div class="gas_status_bar_update"></div></div>
+            <div class="gas_status_el status_el">
+                <img src="assets/gas/statusel.png" alt="open/close button"/>
+            </div>
+        </section>
+        <section class="electricity">
+            <div class="electricity_content">
+                <h3>Electricity</h3>
+            </div>
+            <div class="electricity_status_bar"><div class="electricity_status_bar_update"></div></div>
+            <div class="electricity_status_el status_el">
+                <img src="assets/electricity/statusel.png" alt="open/close button"/>
+            </div>
+        </section>
+    </div>
 </body>
 </html>

@@ -24,6 +24,11 @@
 }
 $header_height: 134px;
 
+.order{
+  visibility: hidden;
+  height: 0;
+}
+
 body{
   margin:0;
   border: 0;

@@ -1,6 +1,9 @@
 $('document').ready(init);
 
+//ELS = ELEMENTS
+
 dataElDefaultHeight = 224;
+dataElOpenHeight = 915;
 templatesUrl = 'assets/templates/';
 
 //Status
@@ -14,6 +17,7 @@ dataEls = [];
 closeTimer = 0;
 secondsPassed = 0;
 secondsUntilClose = 5;
+allowBindEvents = true;
 
 //loading data elements
 firstLoadEls = true;
@@ -43,7 +47,7 @@ function init()
     //generate order list
     getHtmlDataForPresentationItems();
     $(window).resize(function() {
-        generateOrderList(false);
+        generateOrderList(0);
     });
 }
 
@@ -72,7 +76,11 @@ function presModeOn(e){
            marginLeft: '49%'
         },secondsUntilClose*1000,'linear');
         currentOpenedEl.find('div').last().rotate(0, false);
-        currentOpenedEl.find('div').last().html('<h4 id="timergas" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
+        if(currentSelected == 'gas'){
+            currentOpenedEl.find('div').last().html('<h4 id="timergas" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
+        }else{
+            currentOpenedEl.find('div').last().html('<h4 id="timerelectricity" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
+        }
     }
 }
 
@@ -129,7 +137,7 @@ function hoverOutHeader(e){
 
 function getHtmlDataForPresentationItems(){
     if(gasHtml != '' && electricityHtml != ''){
-        generateOrderList(false);
+        generateOrderList(0);
     } else {
         var gasUrl = templatesUrl+'gas.html';
         var electricityUrl = templatesUrl+'electricity.html';
@@ -143,7 +151,7 @@ function getHtmlDataForPresentationItems(){
                     url:electricityUrl,
                     success: function(electricityhtml){
                         electricityHtml = electricityhtml;
-                        generateOrderList(false);
+                        generateOrderList(0);
                     }
                 });
             }
@@ -151,14 +159,13 @@ function getHtmlDataForPresentationItems(){
     }
 }
 
-function generateOrderList(makeExtraElement){
+function generateOrderList(numElsToMake){
     numElementsToGenerate = Math.ceil(($(window).height() - $('header').height())/dataElDefaultHeight)-numGeneratedEls;
     if(numElementsToGenerate == 1 && firstLoadEls){
         numElementsToGenerate++;
-        firstLoadEls = false;
     }
-    if(makeExtraElement){
-        numElementsToGenerate = 1;
+    if(numElsToMake != 0){
+        numElementsToGenerate = numElsToMake;
     }
     if(numElementsToGenerate > 0){
         numGeneratedEls = numGeneratedEls + numElementsToGenerate;
@@ -174,6 +181,8 @@ function generateOrderList(makeExtraElement){
             }
         }
     }
+    console.log('number of elements: ', $('.dataEl').length);
+    //log num elements
     /*if(numElementsToGenerate > 0){
         if(makeExtraElement){
             console.log('generate extra -> update num of data els: '+($('.gas').length+$('.electricity').length)-1);
@@ -184,10 +193,22 @@ function generateOrderList(makeExtraElement){
     //reposition open buttons
     $('.status_el').css('margin-left', $(window).width()/2-$('.status_el').width()/2);
 
-    //hover + click progress
-    if(!isOpen){
+    if(allowBindEvents){
+        //hover + click progress
         $('.gas').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
-        $('.electricity').unbind().on('mouseenter',hoverOverElectricity).on('mouseleave', hoverOutElectricity);
+        $('.electricity').unbind().on('mouseenter',hoverOverElectricity).on('mouseleave', hoverOutElectricity).on('click', selectOpenElectricityElement);
+    }else{
+        allowBindEvents = true;
+    }
+    if(isOpen){
+        currentOpenedEl.unbind();
+    }
+
+    if(firstLoadEls){
+        firstLoadEls = false;
+        currentOpenedEl = $('.gas').first();
+        isOpen = true;
+        openElement();
     }
 }
 
@@ -262,22 +283,58 @@ function hoverOutElectricityWhileOpen(e){
 function selectOpenGasElement(e){
     currentSelected = 'gas';
     currentOpenedEl = $(this);
-    isOpen = true;
-    openElement();
+    selectOpenElement();
 }
 
 function selectOpenElectricityElement(e){
     currentSelected = 'electricity';
     currentOpenedEl = $(this);
-    isOpen = true;
-    openElement();
+    selectOpenElement();
+}
+
+function selectOpenElement(){
+    $('.dataEl').unbind();
+    $('#data_elements').find('section').first().find('div').first().next().find('div').first().stop().animate({
+           width: '100%',
+           marginLeft: '0%'
+    },500);
+
+    elementsToRemove = 0;
+    $('.dataEl').each(function(e){
+       if($(this).index() == currentOpenedEl.index()){
+           elementsToRemove = $(this).index();
+       }
+    });
+    console.log('elements to remove '+elementsToRemove);
+
+    clearInterval(closeTimer);
+    newMarginTop = 0;
+    if(isOpen){
+        newMarginTop = (-((elementsToRemove-1)*dataElDefaultHeight + dataElOpenHeight)) + $('header').height();
+    }else{
+        newMarginTop = (-(elementsToRemove*dataElDefaultHeight)) + $('header').height();
+    }
+
+    //generate new data elements
+    allowBindEvents = false;
+    generateOrderList(elementsToRemove+2);
+
+    $('#data_elements').animate({
+       marginTop: newMarginTop
+    }, 1000, function(){
+        $('.dataEl:lt('+ elementsToRemove +')').remove();
+        $('.dataEl:gt('+ ($('.dataEl').length-3) +')').remove();
+        $('#data_elements').css('margin-top',$('header').height());
+
+        isOpen = true;
+        openElement();
+    });
 }
 
 function openElement(){
-    console.log('open element');
     secondsPassed = 0;
     currentOpenedEl.unbind().animate({
-        height: '915'
+        height: dataElOpenHeight
     }, 500).find('div').first().animate({
         height: '834',
         'background-position-y': '100%',
@@ -288,6 +345,9 @@ function openElement(){
             }else{
                 currentOpenedEl.find('div').last().on('mouseenter', hoverOverElectricityWhileOpen).on('mouseleave', hoverOutElectricityWhileOpen).on('click',closeDataEl).prev().on('mouseenter', hoverOverElectricityWhileOpen).on('mouseleave', hoverOutElectricityWhileOpen).on('click',closeDataEl);
             }
+            $('.gas').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
+            $('.electricity').unbind().on('mouseenter',hoverOverElectricity).on('mouseleave', hoverOutElectricity).on('click', selectOpenElectricityElement);
+            currentOpenedEl.unbind();
     }).css('cursor', 'default');
 
     //Presentation mode autoplay
@@ -336,8 +396,9 @@ function updateCloseTimer(){
 }
 
 function closeDataEl(){
-    currentOpenedEl.css('cursor', 'default');
-    currentOpenedEl.unbind();
+    console.log('close data');
+    $('.dataEl').css('cursor', 'default');
+    $('.dataEl').unbind();
     console.log('closeDataEl');
     clearInterval(closeTimer);
     currentOpenedEl.find('div').last().unbind().prev().unbind();
@@ -357,7 +418,7 @@ function closeDataEl(){
             'background-position-y': '100%'
     }, 500, function(e){
         //generate new data elements
-        generateOrderList(true);
+        generateOrderList(1);
 
         //reset
         currentOpenedEl = '';

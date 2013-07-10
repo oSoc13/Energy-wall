@@ -4,6 +4,7 @@ dataElDefaultHeight = 224;
 templatesUrl = 'assets/templates/';
 
 //Status
+isPresentationModeOn = true;
 isOpen = false;
 currentOpenedEl = '';
 
@@ -33,7 +34,10 @@ function init()
 {
     console.log('Initialise');
 
-    //header hover
+    //header hover + click
+    $('#presentation_mode_on').on('click', presModeOn);
+    $('#presentation_mode_off').on('click', presModeOff);
+    $('#presentation_mode').on('mouseenter', hoverOverPresentationMode).on('mouseleave', hoverOutPresentationMode);
     $('#header_content').on('click',goToSite).on('mouseenter',hoverOverHeader).on('mouseleave',hoverOutHeader);
 
     //generate order list
@@ -41,6 +45,55 @@ function init()
     $(window).resize(function() {
         generateOrderList(false);
     });
+}
+
+function hoverOverPresentationMode(e){
+    $(this).stop().animate({
+        marginLeft: 0
+    }, 500);
+}
+
+function hoverOutPresentationMode(e){
+    $(this).stop().animate({
+        marginLeft: -295
+    }, 500);
+}
+
+function presModeOn(e){
+    e.preventDefault();
+    $(this).addClass('selected');
+    $(this).next().removeClass('selected');
+    isPresentationModeOn = true;
+    if(isOpen){
+        secondsPassed = 0;
+        closeTimer = setInterval(updateCloseTimer, 1000);
+        currentOpenedEl.find('div').first().next().find('div').first().animate({
+           width: '2%',
+           marginLeft: '49%'
+        },secondsUntilClose*1000,'linear');
+        currentOpenedEl.find('div').last().rotate(0, false);
+        currentOpenedEl.find('div').last().html('<h4 id="timergas" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
+    }
+}
+
+function presModeOff(e){
+    e.preventDefault();
+    $(this).addClass('selected');
+    $(this).prev().removeClass('selected');
+    isPresentationModeOn = false;
+    if(isOpen){
+        clearInterval(closeTimer);
+        currentOpenedEl.find('div').first().next().find('div').first().stop().animate({
+               width: '100%',
+               marginLeft: '0%'
+        },500);
+        if(currentSelected == 'gas'){
+            currentOpenedEl.find('div').last().html('<img src="assets/gas/statusel.png" alt="open/close button"/>');
+        }else{
+            currentOpenedEl.find('div').last().html('<img src="assets/electricity/statusel.png" alt="open/close button"/>');
+        }
+        currentOpenedEl.find('div').last().rotate(180, false);
+    }
 }
 
 function goToSite(e){
@@ -121,13 +174,13 @@ function generateOrderList(makeExtraElement){
             }
         }
     }
-    if(numElementsToGenerate > 0){
+    /*if(numElementsToGenerate > 0){
         if(makeExtraElement){
             console.log('generate extra -> update num of data els: '+($('.gas').length+$('.electricity').length)-1);
         }else{
             console.log('num of data els: '+($('.gas').length+$('.electricity').length));
         }
-    }
+    }*/
     //reposition open buttons
     $('.status_el').css('margin-left', $(window).width()/2-$('.status_el').width()/2);
 
@@ -155,15 +208,23 @@ function hoverOutGas(e){
 
 //Gas states while open
 function hoverOverGasWhileOpen(e){
-    currentOpenedEl.find('div').last().rotate(180, false);
-    currentOpenedEl.find('div').last().css('background-image', "url(assets/gas/statusbgh.png)").prepend('<img src="assets/gas/statuselh.png" alt="open/close button"/>').find('h4').remove().parent()
-            .prev().find('div').first().css('background-color','#611204');
+    currentOpenedEl.find('div').last().css('background-image', "url(assets/gas/statusbgh.png)").prev().prev().css('background-color','#611204');
+    if(isPresentationModeOn){
+        currentOpenedEl.find('div').last().rotate(180, false);
+        currentOpenedEl.find('div').last().html('<img src="assets/gas/statuselh.png" alt="open/close button"/>');
+    }else{
+        currentOpenedEl.find('div').last().find('img').first().attr('src','assets/gas/statuselh.png');
+    }
 }
 
 function hoverOutGasWhileOpen(e){
-    currentOpenedEl.find('div').last().rotate(0, false);
-    currentOpenedEl.find('div').last().css('background-image', "url(assets/gas/statusbg.png)").append('<h4 id="timergas" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>').find('img').remove();
+    currentOpenedEl.find('div').last().css('background-image', "url(assets/gas/statusbg.png)");
     currentOpenedEl.find('div').first().css('background-color','#821C00');
+
+    if(isPresentationModeOn){
+        currentOpenedEl.find('div').last().rotate(0, false);
+        currentOpenedEl.find('div').last().html('<h4 id="timergas" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
+    }
 }
 
 //Electricity default hover
@@ -179,24 +240,23 @@ function hoverOutElectricity(e){
 
 //Electricity states while open
 function hoverOverElectricityWhileOpen(e){
-    currentOpenedEl.find('div').last().rotate(180, false);
-    currentOpenedEl.find('div').last().css('background-image', "url(assets/electricity/statusbgh.png)").prepend('<img src="assets/electricity/statuselh.png" alt="open/close button"/>').find('h4').remove().parent()
-            .prev().find('div').first().css('background-color','#611204');
+    currentOpenedEl.find('div').last().css('background-image', "url(assets/electricity/statusbgh.png)").prev().prev().css('background-color','#611204');
+    if(isPresentationModeOn){
+        currentOpenedEl.find('div').last().rotate(180, false);
+        currentOpenedEl.find('div').last().html('<img src="assets/electricity/statuselh.png" alt="open/close button"/>');
+    }else{
+        currentOpenedEl.find('div').last().find('img').first().attr('src','assets/electricity/statuselh.png');
+    }
 }
 
 function hoverOutElectricityWhileOpen(e){
-    currentOpenedEl.find('div').last().rotate(0, false);
-    currentOpenedEl.find('div').last().css('background-image', "url(assets/electricity/statusbg.png)").append('<h4 id="timerelectricity" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>').find('img').remove();
+    currentOpenedEl.find('div').last().css('background-image', "url(assets/electricity/statusbg.png)");
     currentOpenedEl.find('div').first().css('background-color','#821C00');
-}
 
-//General click close
-function clickWhileOpen(e){
-    currentOpenedEl.find('div').first().next().find('div').first().stop().animate({
-           width: '100%',
-           marginLeft: '0%'
-    },500);
-    closeDataEl();
+    if(isPresentationModeOn){
+        currentOpenedEl.find('div').last().rotate(0, false);
+        currentOpenedEl.find('div').last().html('<h4 id="timerelectricity" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
+    }
 }
 
 function selectOpenGasElement(e){
@@ -214,6 +274,7 @@ function selectOpenElectricityElement(e){
 }
 
 function openElement(){
+    console.log('open element');
     secondsPassed = 0;
     currentOpenedEl.unbind().animate({
         height: '915'
@@ -223,17 +284,21 @@ function openElement(){
         'background-position-x': '50%'
     }, 500, function(e){
             if(currentSelected == 'gas'){
-                currentOpenedEl.find('div').last().on('mouseenter', hoverOverGasWhileOpen).on('mouseleave', hoverOutGasWhileOpen).on('click',clickWhileOpen).prev().on('mouseenter', hoverOverGasWhileOpen).on('mouseleave', hoverOutGasWhileOpen).on('click',clickWhileOpen);
+                currentOpenedEl.find('div').last().on('mouseenter', hoverOverGasWhileOpen).on('mouseleave', hoverOutGasWhileOpen).on('click',closeDataEl).prev().on('mouseenter', hoverOverGasWhileOpen).on('mouseleave', hoverOutGasWhileOpen).on('click',closeDataEl);
             }else{
-                currentOpenedEl.find('div').last().on('mouseenter', hoverOverElectricityWhileOpen).on('mouseleave', hoverOutElectricityWhileOpen).on('click',clickWhileOpen).prev().on('mouseenter', hoverOverElectricityWhileOpen).on('mouseleave', hoverOutElectricityWhileOpen).on('click',clickWhileOpen);
+                currentOpenedEl.find('div').last().on('mouseenter', hoverOverElectricityWhileOpen).on('mouseleave', hoverOutElectricityWhileOpen).on('click',closeDataEl).prev().on('mouseenter', hoverOverElectricityWhileOpen).on('mouseleave', hoverOutElectricityWhileOpen).on('click',closeDataEl);
             }
     }).css('cursor', 'default');
 
-    closeTimer = setInterval(updateCloseTimer, 1000);
-    currentOpenedEl.find('div').first().next().find('div').first().animate({
-       width: '2%',
-       marginLeft: '49%'
-    },secondsUntilClose*1000,'linear');
+    //Presentation mode autoplay
+    if(isPresentationModeOn){
+        clearInterval(closeTimer);
+        closeTimer = setInterval(updateCloseTimer, 1000);
+        currentOpenedEl.find('div').first().next().find('div').first().animate({
+           width: '2%',
+           marginLeft: '49%'
+        },secondsUntilClose*1000,'linear');
+    }
 
     if(currentSelected == 'gas'){
         openGasElement();
@@ -245,13 +310,21 @@ function openElement(){
 function openGasElement(){
     console.log('open gas element');
     currentOpenedEl.find('div').first().css('background',"url(assets/gas/flames.png) no-repeat, url(assets/textures/gas.jpg) repeat").css('background-position','50%px 100%, 0px 0px');
-    currentOpenedEl.find('div').last().find('img').addClass('hide').parent().append('<h4 id="timergas" class="timer">'+secondsUntilClose+'</h4>');
+    if(isPresentationModeOn){
+        currentOpenedEl.find('div').last().find('img').addClass('hide').parent().html('<h4 id="timergas" class="timer">'+secondsUntilClose+'</h4>');
+    }else{
+        currentOpenedEl.find('div').last().rotate(180, false);
+    }
 }
 
 function openElectricityElement(){
     console.log('open electricity element');
     currentOpenedEl.find('div').first().css('background',"url(assets/electricity/thunderstruck.png) no-repeat, url(assets/textures/electricity.jpg) repeat").css('background-position','50% 100%, 0px 0px');
-    currentOpenedEl.find('div').last().find('img').addClass('hide').parent().append('<h4 id="timerelectricity" class="timer">'+secondsUntilClose+'</h4>');
+    if(isPresentationModeOn){
+        currentOpenedEl.find('div').last().find('img').addClass('hide').parent().html('<h4 id="timerelectricity" class="timer">'+secondsUntilClose+'</h4>');
+    }else{
+        currentOpenedEl.find('div').last().rotate(180, false);
+    }
 }
 
 function updateCloseTimer(){
@@ -263,39 +336,45 @@ function updateCloseTimer(){
 }
 
 function closeDataEl(){
+    currentOpenedEl.css('cursor', 'default');
+    currentOpenedEl.unbind();
     console.log('closeDataEl');
     clearInterval(closeTimer);
     currentOpenedEl.find('div').last().unbind().prev().unbind();
     currentOpenedEl.find('div').last().rotate(0, false);
     currentOpenedEl.find('div').last().find('img').removeClass('hide').next().remove();
+    //refill timer status bar
+    currentOpenedEl.find('div').first().next().find('div').first().stop().animate({
+           width: '100%',
+           marginLeft: '0%'
+    },500);
+
+    //make element smaller
     currentOpenedEl.animate({
             height: '224'
     }, 500).find('div').first().animate({
             height: '143',
             'background-position-y': '100%'
     }, 500, function(e){
-        $('gas').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
-        $('electricity').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
+        //generate new data elements
+        generateOrderList(true);
 
         //reset
         currentOpenedEl = '';
         isOpen = false;
 
         //show next
-        /*$('#data_elements section').first().find('div').last().prev().find('div').first().remove();
-        $('#data_elements section').first().find('div').last().animate({
-            opacity: 0
-        });*/
-
-        generateOrderList(true);
         newPosition = -(dataElDefaultHeight-$('header').height());
         $('#data_elements').first().animate({
             marginTop:newPosition
         }, 500, function(e){
+            //$('gas').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
+            //$('electricity').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
+
             $('#data_elements').css('margin-top', $('header').height()).find('section').first().remove();
             openNextEl();
         });
-    }).css('cursor', 'pointer');
+    });
 }
 
 function openNextEl(){

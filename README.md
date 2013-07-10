@@ -4,8 +4,18 @@ Essent
 Essent Customer Data Visualisation
 ----------------------------------
 
-To open this project, some requirements are needed and are listed down here.
+### Authors:
+[Bastiaan Andriessen"](https://github.com/BastiaanAndriessen "Bastiaan Andriessen")
+
+### General Description:
+The webapp is made in the context of [oSoc13"](http://summerofcode.be/ "osoc13") in Ghent, BE during the first three weeks of July, 2013.
+The app transforms and visualizes client data for a Belgian energy deliverer: [Essent"](https://www.essent.be/ "essent") via the [DataTank"](https://github.com/tdt "datatank") framework.
+It should clear the logic behind the data for the Essent staff.
+
+### Copyright:
+©oSoc13
 
 ### Requirements:
-*   jQuery: [example link](http://jquery.com/download/ "Download here")
-*   Compass: [example link](http://compass-style.org/ "Download and install here")
+To open this project, some requirements are needed and are listed down here.
+*   jQuery: [Download here"](http://jquery.com/download/ "Download jquery")
+*   Compass: [Download and install here](http://compass-style.org/ "Download and install compass"")

@@ -34,14 +34,64 @@ body{
   text-transform: uppercase;
 
   header{
+    position: absolute;
+    z-index: 200;
     background-repeat: repeat;
     background-image: url('../assets/textures/header.jpg');
     width: 100%;
     height: 133px;
+    top: 0;
 
     -webkit-box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, .3);
     -moz-box-shadow:0px 4px 10px 0px rgba(0, 0, 0, .3);
     box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, .3);
+    #presentation_mode{
+      position: absolute;
+      width: 360px;
+      height: 100%;
+      #content{
+        width: 85%;
+        height: 87%;
+        background: url('../assets/textures/presentation.jpg') repeat;
+        padding-top: 17px;
+
+        h4{
+          width: 100%;
+          color: #48a9c2;
+          text-align: center;
+          font-size: 18pt;
+        }
+
+        a{
+          display: inline-block;
+          width: 118px;
+          height: 58px;
+          background-color: #095e6d;
+          color: #48a9c2;
+          text-decoration: none;
+          margin-top: 15px;
+          line-height: 58px;
+          text-align: center;
+        }
+
+        #presentation_mode_on{
+          margin-left: 30px;
+        }
+
+        #presentation_mode_off{
+          margin-left: 5px;
+        }
+
+        .selected{
+          background-color: #91cbda;
+          color: #095e6d;
+        }
+      }
+      background-image: url('../assets/presentation/rightbar.png');
+      background-repeat: no-repeat;
+      background-position: 90% 50%;
+    }
+
     #header_content{
       cursor: pointer;
       width: 834px;
@@ -87,12 +137,16 @@ body{
     }
   }
 
+  #data_elements{
+    margin-top: 133px;
+  }
+
   .gas, .electricity{
     width: 100%;
     height: 224px;
+    cursor: pointer;
     .gas_content{
       background: url('../assets/gas/flames.png') no-repeat, url('../assets/textures/gas.jpg') repeat;
-      background-position: 0px -200px, 0px 0px;
       h3{
         color: #821c00;
         background: url('../assets/gas/icon.png') no-repeat, url('../assets/gas/underline.png') repeat-x;
@@ -100,7 +154,6 @@ body{
     }
     .electricity_content{
       background: url('../assets/electricity/thunderstruck.png') no-repeat, url('../assets/textures/electricity.jpg') repeat;
-      background-position: 50% -110px, 0px 0px;
       h3{
         color: #002E36;
         background: url('../assets/electricity/icon.png') no-repeat, url('../assets/electricity/underline.png') repeat-x;
@@ -115,6 +168,7 @@ body{
       padding-left: 45px;
     }
     .gas_content, .electricity_content{
+      background-position: 50% 100%, 0px 0px;
       cursor: pointer;
       height: 143px;
       padding-top: 70px;
@@ -163,6 +217,20 @@ body{
         height: 9px;
         margin-left: 12px;
         margin-top: 17px;
+      }
+
+      .timer{
+        font-size: 14pt;
+        text-align: center;
+        margin-top: 11px;
+      }
+
+      #timerelectricity{
+        color: #002E36;
+      }
+
+      #timergas{
+        color: #821C00;
       }
     }
   }

@@ -1,6 +1,16 @@
 @import "compass/reset";
 @import "compass";
 
+@-webkit-keyframes rotate {
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(360deg);}
+}
+
+@-moz-keyframes rotate {
+    from {-moz-transform: rotate(0deg);}
+    to {-moz-transform: rotate(360deg);}
+}
+
 @font-face{
   font-family: 'brandon_grotesqueblack';
   src: url('../assets/fonts/brandon_blk-webfont.eot');
@@ -23,6 +33,7 @@
   font-style: normal;
 }
 $header_height: 134px;
+$yearbutton_width: 8px;
 
 .order{
   visibility: hidden;
@@ -156,23 +167,23 @@ body{
     cursor: pointer;
     .gas_content{
       background: url('../assets/gas/flames.png') no-repeat, url('../assets/textures/gas.jpg') repeat;
-      h3{
+      .energy_source_title{
         color: #821c00;
         background: url('../assets/gas/icon.png') no-repeat, url('../assets/gas/underline.png') repeat-x;
       }
     }
     .electricity_content{
       background: url('../assets/electricity/thunderstruck.png') no-repeat, url('../assets/textures/electricity.jpg') repeat;
-      h3{
+      .energy_source_title{
         color: #002E36;
         background: url('../assets/electricity/icon.png') no-repeat, url('../assets/electricity/underline.png') repeat-x;
       }
     }
-    .gas_content h3{
+    .gas_content .energy_source_title{
       padding-left: 45px;
       width: 275px;
     }
-    .electricity_content h3{
+    .electricity_content .energy_source_title{
       width: 335px;
       padding-left: 45px;
     }
@@ -182,12 +193,197 @@ body{
       height: 143px;
       padding-top: 70px;
       box-shadow:inset 0 0 20px rgba(0, 0, 0, .3);
-      h3{
+      .energy_source_title{
         font-size: 42pt;
         height: 85px;
         margin-left: auto;
         margin-right: auto;
         background-position: 0px 4px;
+      }
+
+      .loading{
+        width: 550px;
+        height: 74px;
+        margin-left: auto;
+        margin-top: 200px;
+        margin-right: auto;
+        h5{
+          position: absolute;
+          color: #fff;
+          font-size: 15pt;
+          width: 74px;
+          height: 74px;
+          line-height: 74px;
+          text-align: center;
+        }
+        img{
+          position: absolute;
+          -webkit-animation-name: rotate;
+          -webkit-animation-duration: 2s;
+          -webkit-animation-iteration-count: infinite;
+          -webkit-animation-timing-function: linear;
+
+          -moz-animation-name: rotate;
+          -moz-animation-duration: 2s;
+          -moz-animation-iteration-count: infinite;
+          -moz-animation-timing-function: linear;
+        }
+        p{
+          font-size: 14pt;
+          color: #fff;
+          line-height: 74px;
+          display: block;
+          margin-left: 100px;
+        }
+      }
+
+      .gasstats{
+        .percentages{
+          span, h5{
+            color: #851E03;
+          }
+        }
+        .year, h4{
+          color: #821c00;
+        }
+        .selector div{
+          background-color: #821c00;
+        }
+      }
+
+      .electricitystats {
+        .percentages{
+          span, h5{
+            color: #002E36;
+          }
+        }
+        .year, h4{
+          color: #002E36;
+        }
+        .selector div{
+          background-color: #002E36;
+        }
+      }
+
+      .stats{
+        width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
+
+        .percentages{
+          width: 100%;
+          height: 150px;
+          margin: 20px auto 55px auto;
+          .circle_param{
+            width: 130px;
+            margin-right: 50px;
+            float: left;
+            span{
+              position: absolute;
+              width: 130px;
+              height: 128px;
+              font-size: 50pt;
+              padding-top: 2px;
+              text-align: center;
+              line-height: 130px;
+            }
+            h5{
+              width: 100%;
+              margin-top: 14px;
+              text-align: center;
+            }
+          }
+          .circle_param:last-child{
+            margin-right: 0px;
+          }
+        }
+
+        .OV span, .OV h5, .DOM span, .DOM h5{
+          color: #fff;
+        }
+
+        h4{
+          width: 280px;
+          margin: 70px auto 0px auto;
+          font-size: 17pt;
+          text-align: center;
+        }
+
+        .graph{
+          width: 1000px;
+          margin-left: auto;
+          margin-right: auto;
+          .graph_add_info{
+            position: absolute;
+            left: 800px;
+            width: 80px;
+            height: 80px;
+            ul{
+              width: 100%;
+              height: 100%;
+              font-size: 10pt;
+              color: #fff;
+              font-weight: lighter;
+              li{
+                height: 27px;
+              }
+            }
+          }
+          #graph_canvas{
+            width: 100%;
+            margin-top: 50px;
+            margin-bottom: 40px;
+          }
+        }
+
+        ul{
+          z-index: 30;
+          position: absolute;
+          font-size: 20pt;
+          list-style: none;
+          li{
+            display: inline-block;
+            margin-right: 80px;
+            width: 110px;
+            height: 32px;
+            line-height: 35px;
+
+            .year{
+              float: left;
+              text-align: center;
+              text-decoration: none;
+              width: 60px;
+              margin-left: 11px;
+              padding-left: 9px;
+              padding-right: 9px;
+            }
+          }
+          .current{
+            .year{
+              color: #fff;
+            }
+          }
+          .last{
+            margin-right: 0px;
+          }
+        }
+        .selector{
+          left: 2%;
+          position: absolute;
+          width: 110px;
+          a, div{
+            position: absolute;
+          }
+          a:last-child{
+            left: 95px;
+          }
+          div{
+            left: 12px;
+            display: inline-block;
+            width: 79px;
+            height: 35px;
+          }
+        }
       }
     }
     .gas_status_bar, .electricity_status_bar{

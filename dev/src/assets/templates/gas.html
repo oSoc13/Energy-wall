@@ -1,6 +1,69 @@
 <section class="gas dataEl" data-order="0">
     <div class="gas_content">
-        <h3>Gasoline</h3>
+        <h3 class="energy_source_title">Gasoline</h3>
+        <div class="loading hide">
+            <h5>0/6</h5>
+            <img src="assets/loading.png" alt="loading image"/>
+            <p>Loading some awesome client data.</p>
+        </div>
+        <div class="gasstats stats hide">
+            <div class="percentages">
+                <div class="OV circle_param">
+                    <span class="value">99</span>
+                    <canvas class="OV_canvas percentage_canvas" width="130" height="130"></canvas>
+                    <h5 class="title">OV(%)</h5>
+                </div>
+                <div class="DOM circle_param">
+                    <span class="value">99</span>
+                    <canvas class="OV_canvas percentage_canvas" width="130" height="130"></canvas>
+                    <h5 class="title">DOM(%)</h5>
+                </div>
+                <div class="contract circle_param">
+                    <span class="value">99</span>
+                    <canvas class="OV_canvas percentage_canvas" width="130" height="130"></canvas>
+                    <h5 class="title">Contact(%)</h5>
+                </div>
+                <div class="social circle_param">
+                    <span class="value">99</span>
+                    <canvas class="OV_canvas percentage_canvas" width="130" height="130"></canvas>
+                    <h5 class="title">Social(%)</h5>
+                </div>
+                <div class="group circle_param">
+                    <span class="value">99</span>
+                    <canvas class="OV_canvas percentage_canvas" width="130" height="130"></canvas>
+                    <h5 class="title">Group(%)</h5>
+                </div>
+                <div class="solar circle_param hide">
+                    <span class="value">99</span>
+                    <canvas class="OV_canvas percentage_canvas" width="130" height="130"></canvas>
+                    <h5 class="title">Solar Panels(%)</h5>
+                </div>
+            </div>
+            <h4>Average Consumption</h4>
+            <div class="graph">
+                <div class="graph_add_info hide">
+                    <ul>
+                        <li class="value_average">Avg:</li>
+                        <li class="value_minimum">Min:</li>
+                        <li class="value_maximum">Max:</li>
+                    </ul>
+                </div>
+                <canvas id="graph_canvas" width="1000" height="330"></canvas>
+            </div>
+            <div class="selector">
+                <a href="" class="left"><img src="assets/gas/timeline_left.png" alt="arrow right"/></a>
+                <div class="color_rect">&nbsp;</div>
+                <a href="" class="right"><img src="assets/gas/timeline_right.png" alt="arrow right"/></a>
+            </div>
+            <ul class="yearnav">
+                <li class="2008 current"><a href="" class="year">2008</a></li>
+                <li class="2009"> <a href="" class="year">2009</a></li>
+                <li class="2010"><a href="" class="year">2010</a></li>
+                <li class="2011"><a href="" class="year">2011</a></li>
+                <li class="2012"><a href="" class="year">2012</a></li>
+                <li class="2013 last"><a href="" class="year">2013</a></li>
+            </ul>
+        </div>
     </div>
     <div class="gas_status_bar"><div class="gas_status_bar_update bar_update"></div></div>
     <div class="gas_status_el status_el">

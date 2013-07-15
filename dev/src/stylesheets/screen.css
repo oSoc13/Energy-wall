@@ -371,41 +371,41 @@ body .gas .gas_content .stats .percentages .circle_param span, body .gas .electr
   text-align: center;
   line-height: 130px;
 }
-/* line 290, ../sass/screen.scss */
+/* line 291, ../sass/screen.scss */
 body .gas .gas_content .stats .percentages .circle_param h5, body .gas .electricity_content .stats .percentages .circle_param h5, body .electricity .gas_content .stats .percentages .circle_param h5, body .electricity .electricity_content .stats .percentages .circle_param h5 {
   width: 100%;
   margin-top: 14px;
   text-align: center;
 }
-/* line 296, ../sass/screen.scss */
+/* line 297, ../sass/screen.scss */
 body .gas .gas_content .stats .percentages .circle_param:last-child, body .gas .electricity_content .stats .percentages .circle_param:last-child, body .electricity .gas_content .stats .percentages .circle_param:last-child, body .electricity .electricity_content .stats .percentages .circle_param:last-child {
   margin-right: 0px;
 }
-/* line 301, ../sass/screen.scss */
+/* line 302, ../sass/screen.scss */
 body .gas .gas_content .stats .OV span, body .gas .gas_content .stats .OV h5, body .gas .gas_content .stats .DOM span, body .gas .gas_content .stats .DOM h5, body .gas .electricity_content .stats .OV span, body .gas .electricity_content .stats .OV h5, body .gas .electricity_content .stats .DOM span, body .gas .electricity_content .stats .DOM h5, body .electricity .gas_content .stats .OV span, body .electricity .gas_content .stats .OV h5, body .electricity .gas_content .stats .DOM span, body .electricity .gas_content .stats .DOM h5, body .electricity .electricity_content .stats .OV span, body .electricity .electricity_content .stats .OV h5, body .electricity .electricity_content .stats .DOM span, body .electricity .electricity_content .stats .DOM h5 {
   color: #fff;
 }
-/* line 305, ../sass/screen.scss */
+/* line 306, ../sass/screen.scss */
 body .gas .gas_content .stats h4, body .gas .electricity_content .stats h4, body .electricity .gas_content .stats h4, body .electricity .electricity_content .stats h4 {
   width: 280px;
   margin: 70px auto 0px auto;
   font-size: 17pt;
   text-align: center;
 }
-/* line 312, ../sass/screen.scss */
+/* line 313, ../sass/screen.scss */
 body .gas .gas_content .stats .graph, body .gas .electricity_content .stats .graph, body .electricity .gas_content .stats .graph, body .electricity .electricity_content .stats .graph {
   width: 1000px;
   margin-left: auto;
   margin-right: auto;
 }
-/* line 316, ../sass/screen.scss */
+/* line 317, ../sass/screen.scss */
 body .gas .gas_content .stats .graph .graph_add_info, body .gas .electricity_content .stats .graph .graph_add_info, body .electricity .gas_content .stats .graph .graph_add_info, body .electricity .electricity_content .stats .graph .graph_add_info {
   position: absolute;
   left: 800px;
   width: 80px;
   height: 80px;
 }
-/* line 321, ../sass/screen.scss */
+/* line 322, ../sass/screen.scss */
 body .gas .gas_content .stats .graph .graph_add_info ul, body .gas .electricity_content .stats .graph .graph_add_info ul, body .electricity .gas_content .stats .graph .graph_add_info ul, body .electricity .electricity_content .stats .graph .graph_add_info ul {
   width: 100%;
   height: 100%;
@@ -413,24 +413,24 @@ body .gas .gas_content .stats .graph .graph_add_info ul, body .gas .electricity_
   color: #fff;
   font-weight: lighter;
 }
-/* line 327, ../sass/screen.scss */
+/* line 328, ../sass/screen.scss */
 body .gas .gas_content .stats .graph .graph_add_info ul li, body .gas .electricity_content .stats .graph .graph_add_info ul li, body .electricity .gas_content .stats .graph .graph_add_info ul li, body .electricity .electricity_content .stats .graph .graph_add_info ul li {
   height: 27px;
 }
-/* line 332, ../sass/screen.scss */
+/* line 333, ../sass/screen.scss */
 body .gas .gas_content .stats .graph #graph_canvas, body .gas .electricity_content .stats .graph #graph_canvas, body .electricity .gas_content .stats .graph #graph_canvas, body .electricity .electricity_content .stats .graph #graph_canvas {
   width: 100%;
   margin-top: 50px;
   margin-bottom: 40px;
 }
-/* line 339, ../sass/screen.scss */
+/* line 340, ../sass/screen.scss */
 body .gas .gas_content .stats ul, body .gas .electricity_content .stats ul, body .electricity .gas_content .stats ul, body .electricity .electricity_content .stats ul {
   z-index: 30;
   position: absolute;
   font-size: 20pt;
   list-style: none;
 }
-/* line 344, ../sass/screen.scss */
+/* line 345, ../sass/screen.scss */
 body .gas .gas_content .stats ul li, body .gas .electricity_content .stats ul li, body .electricity .gas_content .stats ul li, body .electricity .electricity_content .stats ul li {
   display: inline-block;
   margin-right: 80px;
@@ -438,7 +438,7 @@ body .gas .gas_content .stats ul li, body .gas .electricity_content .stats ul li
   height: 32px;
   line-height: 35px;
 }
-/* line 351, ../sass/screen.scss */
+/* line 352, ../sass/screen.scss */
 body .gas .gas_content .stats ul li .year, body .gas .electricity_content .stats ul li .year, body .electricity .gas_content .stats ul li .year, body .electricity .electricity_content .stats ul li .year {
   float: left;
   text-align: center;
@@ -448,63 +448,63 @@ body .gas .gas_content .stats ul li .year, body .gas .electricity_content .stats
   padding-left: 9px;
   padding-right: 9px;
 }
-/* line 362, ../sass/screen.scss */
+/* line 363, ../sass/screen.scss */
 body .gas .gas_content .stats ul .current .year, body .gas .electricity_content .stats ul .current .year, body .electricity .gas_content .stats ul .current .year, body .electricity .electricity_content .stats ul .current .year {
   color: #fff;
 }
-/* line 366, ../sass/screen.scss */
+/* line 367, ../sass/screen.scss */
 body .gas .gas_content .stats ul .last, body .gas .electricity_content .stats ul .last, body .electricity .gas_content .stats ul .last, body .electricity .electricity_content .stats ul .last {
   margin-right: 0px;
 }
-/* line 370, ../sass/screen.scss */
+/* line 371, ../sass/screen.scss */
 body .gas .gas_content .stats .selector, body .gas .electricity_content .stats .selector, body .electricity .gas_content .stats .selector, body .electricity .electricity_content .stats .selector {
   left: 2%;
   position: absolute;
   width: 110px;
 }
-/* line 374, ../sass/screen.scss */
+/* line 375, ../sass/screen.scss */
 body .gas .gas_content .stats .selector a, body .gas .gas_content .stats .selector div, body .gas .electricity_content .stats .selector a, body .gas .electricity_content .stats .selector div, body .electricity .gas_content .stats .selector a, body .electricity .gas_content .stats .selector div, body .electricity .electricity_content .stats .selector a, body .electricity .electricity_content .stats .selector div {
   position: absolute;
 }
-/* line 377, ../sass/screen.scss */
+/* line 378, ../sass/screen.scss */
 body .gas .gas_content .stats .selector a:last-child, body .gas .electricity_content .stats .selector a:last-child, body .electricity .gas_content .stats .selector a:last-child, body .electricity .electricity_content .stats .selector a:last-child {
   left: 95px;
 }
-/* line 380, ../sass/screen.scss */
+/* line 381, ../sass/screen.scss */
 body .gas .gas_content .stats .selector div, body .gas .electricity_content .stats .selector div, body .electricity .gas_content .stats .selector div, body .electricity .electricity_content .stats .selector div {
   left: 12px;
   display: inline-block;
   width: 79px;
   height: 35px;
 }
-/* line 389, ../sass/screen.scss */
+/* line 390, ../sass/screen.scss */
 body .gas .gas_status_bar, body .gas .electricity_status_bar, body .electricity .gas_status_bar, body .electricity .electricity_status_bar {
   width: 100%;
   height: 11px;
   background-color: #fff;
 }
-/* line 393, ../sass/screen.scss */
+/* line 394, ../sass/screen.scss */
 body .gas .gas_status_bar .gas_status_bar_update, body .gas .electricity_status_bar .gas_status_bar_update, body .electricity .gas_status_bar .gas_status_bar_update, body .electricity .electricity_status_bar .gas_status_bar_update {
   background-color: #821c00;
 }
-/* line 396, ../sass/screen.scss */
+/* line 397, ../sass/screen.scss */
 body .gas .gas_status_bar .electricity_status_bar_update, body .gas .electricity_status_bar .electricity_status_bar_update, body .electricity .gas_status_bar .electricity_status_bar_update, body .electricity .electricity_status_bar .electricity_status_bar_update {
   background-color: #002E36;
 }
-/* line 399, ../sass/screen.scss */
+/* line 400, ../sass/screen.scss */
 body .gas .gas_status_bar .gas_status_bar_update, body .gas .gas_status_bar .electricity_status_bar_update, body .gas .electricity_status_bar .gas_status_bar_update, body .gas .electricity_status_bar .electricity_status_bar_update, body .electricity .gas_status_bar .gas_status_bar_update, body .electricity .gas_status_bar .electricity_status_bar_update, body .electricity .electricity_status_bar .gas_status_bar_update, body .electricity .electricity_status_bar .electricity_status_bar_update {
   width: 100%;
   height: 100%;
 }
-/* line 404, ../sass/screen.scss */
+/* line 405, ../sass/screen.scss */
 body .gas .gas_status_el, body .electricity .gas_status_el {
   background-image: url("../assets/gas/statusbg.png");
 }
-/* line 407, ../sass/screen.scss */
+/* line 408, ../sass/screen.scss */
 body .gas .electricity_status_el, body .electricity .electricity_status_el {
   background-image: url("../assets/electricity/statusbg.png");
 }
-/* line 410, ../sass/screen.scss */
+/* line 411, ../sass/screen.scss */
 body .gas .gas_status_el, body .gas .electricity_status_el, body .electricity .gas_status_el, body .electricity .electricity_status_el {
   position: absolute;
   cursor: pointer;
@@ -515,29 +515,29 @@ body .gas .gas_status_el, body .gas .electricity_status_el, body .electricity .g
   margin-right: auto;
   background-repeat: no-repeat;
 }
-/* line 420, ../sass/screen.scss */
+/* line 421, ../sass/screen.scss */
 body .gas .gas_status_el img, body .gas .electricity_status_el img, body .electricity .gas_status_el img, body .electricity .electricity_status_el img {
   width: 16px;
   height: 9px;
   margin-left: 12px;
   margin-top: 17px;
 }
-/* line 427, ../sass/screen.scss */
+/* line 428, ../sass/screen.scss */
 body .gas .gas_status_el .timer, body .gas .electricity_status_el .timer, body .electricity .gas_status_el .timer, body .electricity .electricity_status_el .timer {
   font-size: 14pt;
   text-align: center;
   margin-top: 11px;
 }
-/* line 433, ../sass/screen.scss */
+/* line 434, ../sass/screen.scss */
 body .gas .gas_status_el #timerelectricity, body .gas .electricity_status_el #timerelectricity, body .electricity .gas_status_el #timerelectricity, body .electricity .electricity_status_el #timerelectricity {
   color: #002E36;
 }
-/* line 437, ../sass/screen.scss */
+/* line 438, ../sass/screen.scss */
 body .gas .gas_status_el #timergas, body .gas .electricity_status_el #timergas, body .electricity .gas_status_el #timergas, body .electricity .electricity_status_el #timergas {
   color: #821C00;
 }
 
-/* line 444, ../sass/screen.scss */
+/* line 445, ../sass/screen.scss */
 .hide {
   display: none;
 }

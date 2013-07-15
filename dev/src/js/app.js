@@ -1,6 +1,4 @@
-//TODO: absolute positioning timeline marker
 //TODO: timeline marker arrows
-//TODO: SAVE CANVAS IMAGE FOR REUSE (for graph)
 
 $('document').ready(init);
 //ELS = ELEMENTS
@@ -23,12 +21,14 @@ secondsPassed = 0;
 secondsUntilClose = 6;
 allowBindEvents = true;
 
-//loading data elements
+//loading data elements - preloader
+pointTimer = '';
 firstLoadEls = true;
 numElementsToGenerate = 0;
 lastElementAdded = '';
 numGeneratedEls = 0;
 
+//element templates
 gasHtml = '';
 electricityHtml = '';
 
@@ -42,6 +42,12 @@ yearSecondsPassed = 0;
 currentIndex = 0;
 currentYear = '2008';
 additionalInfoPosVert = 'up';
+isCircleParamsFade = false;
+
+//visiualisation vars
+angle = 0;
+circleParamRotTimer = 0;
+delayTimer = 0;
 
 //canvas graph stats
 var canvasWidth = 0;
@@ -86,17 +92,15 @@ function init()
 }
 
 function loadYear(yearindex){
-    console.log('Loading data for '+yearsToLoad[yearindex]);
     //Calculate data per year (iterate function)
+    console.log('Loading data for '+yearsToLoad[yearindex]);
 
     //Loading circle
     $('.gas').first().find('.loading').fadeIn(900);
     $('.gas').first().find('.loading h5').text((yearindex+1)+'/'+yearsToLoad.length);
-    pointTimer = '';
     if(yearindex == 0){
         numPoints = 1;
         pointTimer = setInterval(function(){
-            console.log('setintervallllll');
             if(numPoints == 1){
                 $('.gas').first().find('.loading p').text('Loading some awesome client data..');
                 numPoints++;
@@ -183,7 +187,6 @@ function loadYear(yearindex){
             minimumGasConsumption = Math.min.apply(Math,arrGasConsumptionUsers);
             maximumGasConsumption = Math.max.apply(Math,arrGasConsumptionUsers);
             generalYearGasData = [averageGasConsumption, minimumGasConsumption, maximumGasConsumption, numDOMUsers, percentOV, percentGasContract, percentGasSocial, percentGasGroup];
-            console.log(generalYearGasData);
             yearGasConsumptionData.push(generalYearGasData);
 
             //Electricity calculations
@@ -206,6 +209,7 @@ function loadYear(yearindex){
             if(yearindex < yearsToLoad.length-1){
                 loadYear(yearindex+1);
             }else{
+                console.log('LOADING DATA COMPLETE');
                 clearInterval(pointTimer);
                 $('.gas').first().find('.loading').fadeOut(300, function(e){
                     $(this).remove();
@@ -220,15 +224,19 @@ function loadYear(yearindex){
 
 //Hover + click states HEADER: presentation mode
 function hoverOverPresentationMode(e){
-    $(this).stop().animate({
+    $(this).unbind().stop().animate({
         marginLeft: 0
-    }, 500);
+    }, 500, function(e){
+        $(this).on('mouseleave', hoverOutPresentationMode);
+    });
 }
 
 function hoverOutPresentationMode(e){
-    $(this).stop().animate({
+    $(this).unbind().stop().animate({
         marginLeft: -295
-    }, 500);
+    }, 500, function(){
+        $(this).on('mouseenter', hoverOverPresentationMode);
+    });
 }
 
 function presModeOn(e){
@@ -236,51 +244,58 @@ function presModeOn(e){
     $(this).addClass('selected');
     $(this).next().removeClass('selected');
     isPresentationModeOn = true;
+    reset();
+
     if(isOpen){
-        loadCanvas();
-        secondsPassed = 0;
-        closeTimer = setInterval(updateCloseTimer, 1000);
-        //reset year
-        yearTimer = setInterval(updateYearTimer, Math.round(secondsUntilClose/numYearDivisions)*1000);
+        //update year selector
         delayTimer = setInterval(function(){
             clearInterval(delayTimer);
-            $('.stats .current').removeClass('current');
-            $('.stats ul').find('li').first().addClass('current');
+            $(currentOpenedEl).find('.stats .current').removeClass('current');
+            $(currentOpenedEl).find('.2008').addClass('current');
+            updateDataPointSelected();
+            startCountdown();
         }, 250);
-        $('.selector').animate({
-            left: $('.stats ul').find('li').first().position().left + $('.stats .current').first().width()*1.54
+        $(currentOpenedEl).find('.selector').animate({
+            left: $(currentOpenedEl).find('.2008').position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left
         }, 500);
 
-        currentOpenedEl.find('div').first().next().find('div').first().animate({
-           width: '2%',
-           marginLeft: '49%'
-        },secondsUntilClose*1000,'linear');
-        currentOpenedEl.find('div').last().rotate(0, false);
+        $(currentOpenedEl).find('div').last().rotate(0, false);
         if(currentSelected == 'gas'){
-            currentOpenedEl.find('div').last().html('<h4 id="timergas" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
+            $(currentOpenedEl).find('div').last().html('<h4 id="timergas" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
         }else{
-            currentOpenedEl.find('div').last().html('<h4 id="timerelectricity" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
+            $(currentOpenedEl).find('div').last().html('<h4 id="timerelectricity" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
         }
     }
 }
 
 function presModeOff(e){
     e.preventDefault();
+    //set button
     $(this).addClass('selected');
     $(this).prev().removeClass('selected');
+
+    $(currentOpenedEl).find('.current').removeClass('current');
+    $(currentOpenedEl).find('.'+currentYear).addClass('current');
+
     isPresentationModeOn = false;
     if(isOpen){
-        reset();
-        currentOpenedEl.find('div').first().next().find('div').first().stop().animate({
+        //reset timers
+        clearInterval(yearTimer);
+        clearInterval(closeTimer);
+        clearInterval(delayTimer);
+
+        //animate timebar to full width
+        $(currentOpenedEl).find('div').first().next().find('div').first().stop().animate({
                width: '100%',
                marginLeft: '0%'
         },500);
+        //update status icon bottom bar
         if(currentSelected == 'gas'){
-            currentOpenedEl.find('div').last().html('<img src="assets/gas/statusel.png" alt="open/close button"/>');
+            $(currentOpenedEl).find('div').last().html('<img src="assets/gas/statusel.png" alt="open/close button"/>');
         }else{
-            currentOpenedEl.find('div').last().html('<img src="assets/electricity/statusel.png" alt="open/close button"/>');
+            $(currentOpenedEl).find('div').last().html('<img src="assets/electricity/statusel.png" alt="open/close button"/>');
         }
-        currentOpenedEl.find('div').last().rotate(180, false);
+        $(currentOpenedEl).find('div').last().rotate(180, false);
     }
 }
 
@@ -484,10 +499,8 @@ function selectOpenElement(){
            elementsToRemove = $(this).index();
        }
     });
-    console.log('elements to remove '+elementsToRemove);
 
     //animate info to top
-    //console.log('graph add info: '+currentOpenedEl.find('.graph_add_info'));
     $('.graph_add_info').animate({
         top: '0px'
     }, 200);
@@ -519,10 +532,6 @@ function selectOpenElement(){
 }
 
 function openElement(){
-    secondsPassed = 0;
-
-    //set year marker
-    $('.selector').css('left',$('.stats .yearnav').find('li').first().position().left + $('.stats .current').first().width()*1.54);
 
     newHeight = 834 + 30;
     currentOpenedEl.find('.gas_content').animate({
@@ -564,8 +573,6 @@ function openElement(){
 }
 
 function startCountdown(){
-    console.log('startCountdown');
-
     //load data - setup timer divisions years
     currentIndex = 0;
     currentYear = '2008';
@@ -605,29 +612,28 @@ function openElectricityElement(){
 
 //year ticker method
 function updateYearTimer(){
-    console.log('change year');
+    console.log('updateYearTimer');
     yearSecondsPassed++;
-    console.log('yeardivisions: '+numYearDivisions);
     if(yearSecondsPassed < numYearDivisions){
         //Update year selector (nav) + general data vars (currentindex,...)
         if(currentIndex < yearsToLoad.length-1){
             currentIndex++;
             delayTimer = setInterval(function(){
                 clearInterval(delayTimer);
-                $('.stats .current').removeClass('current').next().addClass('current');
+                $(currentOpenedEl).find('.stats .current').removeClass('current').next().addClass('current');
             }, 250);
             $('.selector').animate({
-                left: $('.stats .current').next().position().left + $('.stats .current').first().width()*1.54
+                left: $(currentOpenedEl).find('.stats .current').next().position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left
             }, 500);
         }else{
             currentIndex = 0;
             delayTimer = setInterval(function(){
                 clearInterval(delayTimer);
-                $('.stats .current').removeClass('current');
-                $('.stats ul').find('li').first().addClass('current');
+                $(currentOpenedEl).find('.stats .current').removeClass('current');
+                $(currentOpenedEl).find('.stats ul').find('li').first().addClass('current');
             }, 250);
             $('.selector').animate({
-                left: $('.stats ul').find('li').first().position().left + $('.stats .current').first().width()*1.54
+                left: $(currentOpenedEl).find('.stats ul').find('li').first().position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left
             }, 500);
         }
         currentYear = yearsToLoad[currentIndex];
@@ -643,35 +649,7 @@ function updateYearTimer(){
         }
 
         //UPDATE GRAPH DATA
-        //animate point
-        $("#graph_canvas").animateLayer('datapointselected', {
-            opacity:0
-        }, 100, function(){
-            $("#graph_canvas").removeLayer('datapointselected');
-            $('#graph_canvas').drawImage({
-              layer:true,
-              name: 'datapointselected',
-              source: 'assets/canvas/datapointselected.png',
-              fromCenter: false,
-              opacity: 0,
-              x: $("#graph_canvas").getLayer('datapoint'+currentIndex).x, y:$("#graph_canvas").getLayer('datapoint'+currentIndex).y
-            }).animateLayer('datapointselected', {
-              opacity:1
-            }, 100, 'linear');
-        });
-        //animate additional info signs
-        $("#graph_canvas").animateLayer('dataspec0', {
-            opacity:0
-        }, 100).animateLayer('dataspec1', {
-            opacity:0
-        }, 100).animateLayer('dataspec2', {
-            opacity:0
-        }, 100, function(){
-            $("#graph_canvas").removeLayer('dataspec0');
-            $("#graph_canvas").removeLayer('dataspec1');
-            $("#graph_canvas").removeLayer('dataspec2');
-            drawGraphAdditionalInfo();
-        });
+        updateDataPointSelected();
 
         //change circle data
         drawCircleData();
@@ -680,6 +658,7 @@ function updateYearTimer(){
 
 //close ticker method
 function updateCloseTimer(){
+    console.log('updateCloseTimer');
     secondsPassed++;
     $('.timer').html(secondsUntilClose-secondsPassed);
     if(secondsPassed == secondsUntilClose){
@@ -745,17 +724,20 @@ function closeDataEl(){
 }
 
 function reset(){
-    $('.dataEl').css('cursor', 'default');
-    $('.dataEl').unbind();
+    clearInterval(yearTimer);
+    clearInterval(closeTimer);
+    clearInterval(delayTimer);
+    $('.dataEl').css('cursor', 'default').unbind();
+
     //reset year timeline
     currentIndex = 0;
     currentYear = '2008';
+    secondsPassed = 0;
     yearSecondsPassed = 0;
-    clearInterval(yearTimer);
-    clearInterval(closeTimer);
 }
 
 function openNextEl(){
+    reset();
     if(currentSelected == 'gas'){
         currentSelected = 'electricity';
     }else{
@@ -763,15 +745,18 @@ function openNextEl(){
     }
     currentOpenedEl = $('#data_elements').find('section').first();
     isOpen = true;
+    isCircleParamsFade = false;
     openElement();
 }
 
-//All canvas shizzle
+//All canvas (graph) shizzle
 function loadCanvas(){
+    $(currentOpenedEl).find("#graph_canvas").clearCanvas();
+
     canvasWidth = $('#graph_canvas').get(0).width;
     canvasHeight = $('#graph_canvas').get(0).height;
 
-    //draw circle data
+    //draw circle params data
     drawCircleData();
 
     //get averages from precalculated array
@@ -851,6 +836,11 @@ function loadCanvas(){
     if(isPresentationModeOn){
         $(window).trigger('startCountDown');
     }
+
+    //set year marker and set current year
+    console.log('reset position year indicator: '+$(currentOpenedEl).find('.2008').position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left);
+    $(currentOpenedEl).find('.selector').css('left', $(currentOpenedEl).find('.2008').position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left);
+    $(currentOpenedEl).find('.2008').addClass('current');
 }
 
 function drawCircleData(){
@@ -899,6 +889,26 @@ function drawCircleData(){
 
     //center circle params
     $('.percentages').css('width',(currentOpenedEl.find('.percentages div').length*180)-50);
+
+    //constant rotation animation
+    clearInterval(circleParamRotTimer);
+    circleParamRotTimer = setInterval(function(){
+          angle += 3;
+         $(currentOpenedEl).find(".circle_param canvas").rotate(angle);
+    }, 50);
+
+    //fade circle params in
+    if(!isCircleParamsFade){
+        isCircleParamsFade = true;
+        animationDelayIndex = 0;
+        currentOpenedEl.find('.circle_param').each(function(e){
+            $(this).css('opacity', 0);
+            $(this).delay(50*animationDelayIndex).animate({
+                opacity: 1
+            }, 1000);
+            animationDelayIndex++;
+        });
+    }
 }
 
 function drawGraphAdditionalInfo(){
@@ -946,6 +956,38 @@ function drawGraphAdditionalInfo(){
     minimumCurrentYear = yearGasConsumptionData[currentIndex][1];
     maximumCurrentYear = yearGasConsumptionData[currentIndex][2];
     currentOpenedEl.find('.value_average').text('Avg: '+averageCurrentYear).next().text('Min: '+minimumCurrentYear).next().text('Max: '+maximumCurrentYear);
+}
+
+function updateDataPointSelected(){
+    //animate point
+    $("#graph_canvas").animateLayer('datapointselected', {
+        opacity:0
+    }, 100, function(){
+        $("#graph_canvas").removeLayer('datapointselected');
+        $('#graph_canvas').drawImage({
+          layer:true,
+          name: 'datapointselected',
+          source: 'assets/canvas/datapointselected.png',
+          fromCenter: false,
+          opacity: 0,
+          x: $("#graph_canvas").getLayer('datapoint'+currentIndex).x, y:$("#graph_canvas").getLayer('datapoint'+currentIndex).y
+        }).animateLayer('datapointselected', {
+          opacity:1
+        }, 100, 'linear');
+    });
+    //animate additional info signs
+    $("#graph_canvas").animateLayer('dataspec0', {
+        opacity:0
+    }, 100).animateLayer('dataspec1', {
+        opacity:0
+    }, 100).animateLayer('dataspec2', {
+        opacity:0
+    }, 100, function(){
+        $("#graph_canvas").removeLayer('dataspec0');
+        $("#graph_canvas").removeLayer('dataspec1');
+        $("#graph_canvas").removeLayer('dataspec2');
+        drawGraphAdditionalInfo();
+    });
 }
 
 //Rotate additional function

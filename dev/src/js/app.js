@@ -208,7 +208,7 @@ function loadYear(yearindex){
             averageElectricityConsumption = Math.round(sumElectricityConsumption/numElectricityUsers);
             minimumElectricityConsumption = Math.min.apply(Math,arrElectricityConsumptionUsers);
             maximumElectricityConsumption = Math.max.apply(Math,arrElectricityConsumptionUsers);
-            generalYearElectricityData = [averageElectricityConsumption, minimumElectricityConsumption, maximumElectricityConsumption, percentOV, percentGasContract, percentElectricityContract, percentElectricitySocial, percentElectricityGroup, percentElectricitySolar];
+            generalYearElectricityData = [averageElectricityConsumption, minimumElectricityConsumption, maximumElectricityConsumption, numDOMUsers, percentOV, percentElectricityContract, percentElectricitySocial, percentElectricityGroup, percentElectricitySolar];
             yearElectricityConsumptionData.push(generalYearElectricityData);
 
             //check status of loading process
@@ -1047,6 +1047,7 @@ function drawCircleData(){
         context.stroke();
         context.closePath();
 
+        //change text
         $(canvas).prev().text(arrConsumptionData[currentIndex][p]);
     }
 
@@ -1056,8 +1057,12 @@ function drawCircleData(){
     //constant rotation animation
     clearInterval(circleParamRotTimer);
     circleParamRotTimer = setInterval(function(){
-          angle += 3;
-         $(currentOpenedEl).find(".circle_param canvas").rotate(angle);
+        if(angle == 360){
+            angle = 3;
+        }else{
+            angle += 3;
+        }
+        $(currentOpenedEl).find(".circle_param canvas").rotate(angle);
     }, 50);
 
     //fade circle params in

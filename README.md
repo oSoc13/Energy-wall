@@ -4,6 +4,7 @@ Essent Customer Data Visualisation
 ### Authors
 
 [Bastiaan Andriessen](https://github.com/BastiaanAndriessen "Bastiaan Andriessen")
+[The oSoc'13 Team](https://github.com/oSoc13 "oSoc'13 Team")
 
 ### General Description:
 The webapp is made in the context of [oSoc13](http://summerofcode.be/ "osoc13") in Ghent, BE during the first three weeks of July, 2013.

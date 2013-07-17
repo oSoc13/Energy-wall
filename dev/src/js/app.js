@@ -1,5 +1,3 @@
-//TODO: timeline marker arrows
-
 $('document').ready(init);
 //ELS = ELEMENTS
 
@@ -7,6 +5,7 @@ dataElDefaultHeight = 224;
 dataElOpenHeight = 915;
 dataTankUrl = 'http://localhost/osoc13/public/essent/';
 templatesUrl = 'assets/templates/';
+projectRoot = 'http://localhost/Essent/dev/src/';
 
 //Status
 isPresentationModeOn = true;
@@ -18,7 +17,7 @@ currentSelected = 'gas';
 dataEls = [];
 closeTimer = 0;
 secondsPassed = 0;
-secondsUntilClose = 6;
+secondsUntilClose = 6; //must be dividable by 6
 allowBindEvents = true;
 
 //loading data elements - preloader
@@ -27,6 +26,7 @@ firstLoadEls = true;
 numElementsToGenerate = 0;
 lastElementAdded = '';
 numGeneratedEls = 0;
+dataLoadFailedTimer = '';
 
 //element templates
 gasHtml = '';
@@ -65,8 +65,10 @@ total = 0;
 //Init Setup
 function init()
 {
-    console.log('Initialise');
+    //set timers
     $(window).on('startCountDown', startCountdown);
+    //remove js disabled warning
+    $('#disabled').remove();
 
     //load and structurize data
     loadYear(0);
@@ -91,10 +93,8 @@ function init()
     });
 }
 
+//Calculate data per year (iterate function)
 function loadYear(yearindex){
-    //Calculate data per year (iterate function)
-    console.log('Loading data for '+yearsToLoad[yearindex]);
-
     //Loading circle
     $('.gas').first().find('.loading').fadeIn(900);
     $('.gas').first().find('.loading h5').text((yearindex+1)+'/'+yearsToLoad.length);
@@ -209,8 +209,8 @@ function loadYear(yearindex){
             if(yearindex < yearsToLoad.length-1){
                 loadYear(yearindex+1);
             }else{
-                console.log('LOADING DATA COMPLETE');
                 clearInterval(pointTimer);
+                clearInterval(dataLoadFailedTimer);
                 $('.gas').first().find('.loading').fadeOut(300, function(e){
                     $(this).remove();
                     currentOpenedEl.find('.stats').removeClass('hide').fadeIn(600, function(e){
@@ -218,8 +218,27 @@ function loadYear(yearindex){
                     });
                 });
             }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            currentOpenedEl.find('.loading p').text('Failed to load resource '+(yearindex+1)+'/'+yearsToLoad.length+'. Retry in 5 seconds');
+            secondsLeft = 4;
+            retryTimer = setInterval(function(){
+                secondsLeft--;
+                currentOpenedEl.find('.loading p').text('Failed to load resource '+(yearindex+1)+'/'+yearsToLoad.length+'. Retry in '+secondsLeft+' seconds');
+                if(secondsLeft == 0){
+                    clearInterval(retryTimer);
+                    window.open(projectRoot);
+                }
+            }, 1000);
         }
     });
+
+    //if data keeps loading
+    clearInterval(dataLoadFailedTimer);
+    dataLoadFailedTimer = setInterval(function(){
+        clearInterval(dataLoadFailedTimer);
+        window.open(projectRoot);
+    }, 5000);
 }
 
 //Hover + click states HEADER: presentation mode
@@ -255,10 +274,15 @@ function presModeOn(e){
             updateDataPointSelected();
             startCountdown();
         }, 250);
+        //animate year selector to first year and set arrows accordingly
         $(currentOpenedEl).find('.selector').animate({
-            left: $(currentOpenedEl).find('.2008').position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left
+            left: $(currentOpenedEl).find('.2008').position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left + 9
         }, 500);
+        $(currentOpenedEl).find('.selector').find('a').first().fadeOut();
+        $(currentOpenedEl).find('.selector').find('a').last().fadeIn();
+        bindArrowNavigationEvents();
 
+        //update closetimer icon
         $(currentOpenedEl).find('div').last().rotate(0, false);
         if(currentSelected == 'gas'){
             $(currentOpenedEl).find('div').last().html('<h4 id="timergas" class="timer">'+(secondsUntilClose-secondsPassed)+'</h4>');
@@ -353,6 +377,8 @@ function getHtmlDataForPresentationItems(){
                 });
             }
         });
+        //These ajaxcalls do not have errorhandling because the ajaxcall would return a 404
+        //if the call would fail so the 404 errortemplate will be shown in case of a failed ajaxcall here
     }
 }
 
@@ -563,6 +589,8 @@ function openElement(){
             }else{
                 firstLoadEls = false;
             }
+
+            bindArrowNavigationEvents();
     }).css('cursor', 'default');
 
     if(currentSelected == 'gas'){
@@ -570,6 +598,102 @@ function openElement(){
     }else{
         openElectricityElement();
     }
+}
+
+//bind events to navigation arrows (years)
+function bindArrowNavigationEvents(){
+    currentOpenedEl.find('.selector .left').unbind().on('click', showPreviousYear);
+    currentOpenedEl.find('.selector .right').unbind().on('click', showNextYear);
+    currentOpenedEl.find('.year').unbind().on('click', changeYearByClick);
+}
+
+function showPreviousYear(e){
+    e.preventDefault();
+    currentIndex--;
+    currentYear = yearsToLoad[currentIndex];
+    changeYear(currentOpenedEl.find('.'+currentYear).find('a'));
+}
+
+function showNextYear(e){
+    e.preventDefault();
+    currentIndex++;
+    currentYear = yearsToLoad[currentIndex];
+    changeYear(currentOpenedEl.find('.'+currentYear).find('a'));
+}
+
+function changeYearByClick(e){
+    e.preventDefault();
+    yearClicked = $(this);
+    changeYear(yearClicked);
+}
+
+function changeYear(yearClicked){
+    if(isPresentationModeOn){
+        $('#presentation_mode').animate({
+                    marginLeft: 0
+        }, 500, function(){
+            $('#presentation_mode_off').addClass('selected').prev().removeClass('selected');
+            $('#presentation_mode').delay(2000).animate({
+                    marginLeft: -295
+            }, 500);
+        });
+        isPresentationModeOn = false;
+    }
+
+    //update status icon bottom bar
+    if(currentSelected == 'gas'){
+        $(currentOpenedEl).find('div').last().html('<img src="assets/gas/statusel.png" alt="open/close button"/>');
+    }else{
+        $(currentOpenedEl).find('div').last().html('<img src="assets/electricity/statusel.png" alt="open/close button"/>');
+    }
+    $(currentOpenedEl).find('div').last().rotate(180, false);
+
+    //animate status bar to full width
+    currentOpenedEl.find('.gas_status_bar_update').stop().animate({
+           width: '100%',
+           marginLeft: '0%'
+    },{ duration: 500, queue: false });
+
+    reset();
+    currentYear = yearClicked.parent().attr('class').split(' ')[0];
+    for(var i = 0; i<yearsToLoad.length; i++){
+        if(yearsToLoad[i] == currentYear){
+            currentIndex = i;
+        }
+    }
+
+    //update arrows year indicator
+    if(currentIndex == 0){
+        $(currentOpenedEl).find('.selector').find('a').first().fadeOut();
+        $(currentOpenedEl).find('.selector').find('a').last().fadeIn();
+    }else if(currentIndex == parseFloat(yearsToLoad.length)-1){
+        $(currentOpenedEl).find('.selector').find('a').first().fadeIn();
+        $(currentOpenedEl).find('.selector').find('a').last().fadeOut();
+    }else{
+        $(currentOpenedEl).find('.selector').find('a').first().fadeIn();
+        $(currentOpenedEl).find('.selector').find('a').last().fadeIn();
+    }
+    bindArrowNavigationEvents();
+
+
+    delayTimer = setInterval(function(){
+        clearInterval(delayTimer);
+        currentOpenedEl.find('.yearnav .current').removeClass('current');
+        yearClicked.parent().addClass('current');
+
+        updateDataPointSelected();
+
+    }, 250);
+
+    //Update selector position
+    $(currentOpenedEl).find('.selector').animate({
+        left: yearClicked.position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left
+    }, 500);
+
+    //rebind events other dataels
+    $('.gas').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
+    $('.electricity').unbind().on('mouseenter',hoverOverElectricity).on('mouseleave', hoverOutElectricity).on('click', selectOpenElectricityElement);
+    currentOpenedEl.unbind();
 }
 
 function startCountdown(){
@@ -591,7 +715,6 @@ function startCountdown(){
 }
 
 function openGasElement(){
-    console.log('open gas element');
     currentOpenedEl.find('div').first().css('background',"url(assets/gas/flames.png) no-repeat, url(assets/textures/gas.jpg) repeat").css('background-position','50%px 100%, 0px 0px');
     if(isPresentationModeOn){
         currentOpenedEl.find('div').last().find('img').addClass('hide').parent().html('<h4 id="timergas" class="timer">'+secondsUntilClose+'</h4>');
@@ -601,7 +724,6 @@ function openGasElement(){
 }
 
 function openElectricityElement(){
-    console.log('open electricity element');
     currentOpenedEl.find('div').first().css('background',"url(assets/electricity/thunderstruck.png) no-repeat, url(assets/textures/electricity.jpg) repeat").css('background-position','50% 100%, 0px 0px');
     if(isPresentationModeOn){
         currentOpenedEl.find('div').last().find('img').addClass('hide').parent().html('<h4 id="timerelectricity" class="timer">'+secondsUntilClose+'</h4>');
@@ -612,7 +734,6 @@ function openElectricityElement(){
 
 //year ticker method
 function updateYearTimer(){
-    console.log('updateYearTimer');
     yearSecondsPassed++;
     if(yearSecondsPassed < numYearDivisions){
         //Update year selector (nav) + general data vars (currentindex,...)
@@ -623,7 +744,7 @@ function updateYearTimer(){
                 $(currentOpenedEl).find('.stats .current').removeClass('current').next().addClass('current');
             }, 250);
             $('.selector').animate({
-                left: $(currentOpenedEl).find('.stats .current').next().position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left
+                left: $(currentOpenedEl).find('.stats .current').next().position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left + 9
             }, 500);
         }else{
             currentIndex = 0;
@@ -633,20 +754,21 @@ function updateYearTimer(){
                 $(currentOpenedEl).find('.stats ul').find('li').first().addClass('current');
             }, 250);
             $('.selector').animate({
-                left: $(currentOpenedEl).find('.stats ul').find('li').first().position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left
+                left: $(currentOpenedEl).find('.stats ul').find('li').first().position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left + 9
             }, 500);
         }
         currentYear = yearsToLoad[currentIndex];
         if(currentIndex == 0){
-            $('.selector').find('a').first().fadeOut();
-            $('.selector').find('a').last().fadeIn();
-        }else if(currentIndex == yearsToLoad.length-1){
-            $('.selector').find('a').first().fadeIn();
-            $('.selector').find('a').last().fadeOut();
+            $(currentOpenedEl).find('.selector').find('a').first().fadeOut();
+            $(currentOpenedEl).find('.selector').find('a').last().fadeIn();
+        }else if(currentIndex == parseFloat(yearsToLoad.length)-1){
+            $(currentOpenedEl).find('.selector').find('a').first().fadeIn();
+            $(currentOpenedEl).find('.selector').find('a').last().fadeOut();
         }else{
-            $('.selector').find('a').first().fadeIn();
-            $('.selector').find('a').last().fadeIn();
+            $(currentOpenedEl).find('.selector').find('a').first().fadeIn();
+            $(currentOpenedEl).find('.selector').find('a').last().fadeIn();
         }
+        bindArrowNavigationEvents();
 
         //UPDATE GRAPH DATA
         updateDataPointSelected();
@@ -658,7 +780,6 @@ function updateYearTimer(){
 
 //close ticker method
 function updateCloseTimer(){
-    console.log('updateCloseTimer');
     secondsPassed++;
     $('.timer').html(secondsUntilClose-secondsPassed);
     if(secondsPassed == secondsUntilClose){
@@ -667,7 +788,6 @@ function updateCloseTimer(){
 }
 
 function closeDataEl(){
-    console.log('close data');
     //fadeout stats
     currentOpenedEl.find('div').first().find('div').first().fadeOut(200);
 
@@ -682,7 +802,7 @@ function closeDataEl(){
     //fade data out + additional info animate to top
     currentOpenedEl.find('.stats').fadeOut();
     currentOpenedEl.find('.graph_add_info').animate({
-        top: '80px'
+        top: '90px'
     }, 200);
 
     currentOpenedEl.find('div').last().unbind().prev().unbind();
@@ -713,9 +833,6 @@ function closeDataEl(){
         $('#data_elements').first().animate({
             marginTop:newPosition
         }, 500, function(e){
-            //$('gas').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
-            //$('electricity').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
-
             $('#data_elements').css('margin-top', $('header').height()).find('section').first().remove();
             openNextEl();
             $('.selector').find('a').last().fadeIn();
@@ -724,10 +841,15 @@ function closeDataEl(){
 }
 
 function reset(){
+    if(currentOpenedEl != ''){
+        currentOpenedEl.find('gas_status_bar_update').stop();
+    }
+
     clearInterval(yearTimer);
     clearInterval(closeTimer);
     clearInterval(delayTimer);
-    $('.dataEl').css('cursor', 'default').unbind();
+    $('.dataEl').css('cursor', 'default');
+    $('.dataEl').unbind();
 
     //reset year timeline
     currentIndex = 0;
@@ -838,8 +960,7 @@ function loadCanvas(){
     }
 
     //set year marker and set current year
-    console.log('reset position year indicator: '+$(currentOpenedEl).find('.2008').position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left);
-    $(currentOpenedEl).find('.selector').css('left', $(currentOpenedEl).find('.2008').position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left);
+    $(currentOpenedEl).find('.selector').css('left', $(currentOpenedEl).find('.2008').position().left + $(currentOpenedEl).find('.yearnav').position().left + $(currentOpenedEl).find('.stats').position().left + 9);
     $(currentOpenedEl).find('.2008').addClass('current');
 }
 
@@ -933,7 +1054,7 @@ function drawGraphAdditionalInfo(){
             }, 200, 'linear');
         }
         currentOpenedEl.find('.graph_add_info').css('left', $("#graph_canvas").position().left + $("#graph_canvas").getLayer('dataspec1').x + 18)
-        .css('top', $("#graph_canvas").position().top + $("#graph_canvas").getLayer('dataspec0').y - 27).fadeIn(700);
+        .css('top', $("#graph_canvas").position().top + $("#graph_canvas").getLayer('dataspec0').y - 16).fadeIn(700);
     }else{
         iterationsComplete = 0;
         for(var m = 0; m<3; m++){
@@ -950,7 +1071,7 @@ function drawGraphAdditionalInfo(){
             }, 400);
         }
         currentOpenedEl.find('.graph_add_info').css('left', $("#graph_canvas").position().left + $("#graph_canvas").getLayer('dataspec1').x + 18)
-                .css('top', $("#graph_canvas").position().top + $("#graph_canvas").getLayer('dataspec2').y - 13).fadeIn(700);
+                .css('top', $("#graph_canvas").position().top + $("#graph_canvas").getLayer('dataspec2').y - 2).fadeIn(700);
     }
     averageCurrentYear = yearGasConsumptionData[currentIndex][0];
     minimumCurrentYear = yearGasConsumptionData[currentIndex][1];
@@ -988,6 +1109,8 @@ function updateDataPointSelected(){
         $("#graph_canvas").removeLayer('dataspec2');
         drawGraphAdditionalInfo();
     });
+
+    drawCircleData();
 }
 
 //Rotate additional function

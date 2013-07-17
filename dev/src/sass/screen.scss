@@ -52,7 +52,7 @@ body{
 
   header{
     position: fixed;
-    z-index: 200;
+    z-index: 20000;
     background-repeat: repeat;
     background-image: url('../assets/textures/header.jpg');
     width: 100%;
@@ -146,7 +146,7 @@ body{
           font-size: 40pt;
           height: 100%;
           float: left;
-          margin-top: 17px;
+          margin-top: 18px;
           margin-left: 10px;
         }
 
@@ -154,6 +154,68 @@ body{
           margin-left: 3px;
         }
       }
+    }
+  }
+
+  #disabled{
+    width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+
+    margin: 190px auto 0 auto;
+
+    h3, h4, p{
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h3, h4{
+      text-align: center;
+    }
+
+    h3{
+      width: 100%;
+      color: #dc006e;
+      font-size: 45pt;
+      margin-bottom: 30px;
+    }
+
+    h4, p{
+      width: 90%;
+      color: #13758e;
+    }
+
+    h4{
+      font-size: 23pt;
+      margin-top: 55px;
+    }
+
+    p{
+      width: 90%;
+      font-family: brandon_grotesquemedium, Helvetica, sans-serif;
+      margin-top: 15px;
+      margin-bottom: 40px;
+      line-height: 18pt;
+      text-transform: none;
+      font-size: 14pt;
+
+      a{
+        text-decoration: none;
+        font-weight: bold;
+        color: #0c5d72;
+      }
+
+      a:hover{
+        color: #dc006e;
+      }
+    }
+
+    .p2{
+      text-align: center;
+    }
+
+    img{
+      margin-top: 20px;
     }
   }
 
@@ -249,6 +311,22 @@ body{
         .selector div{
           background-color: #821c00;
         }
+
+        .left{
+          background-image: url('../assets/gas/timeline_left.png');
+        }
+
+        .left:hover{
+          background-image: url('../assets/gas/timeline_lefth.png');
+        }
+
+        .right{
+          background-image: url('../assets/gas/timeline_right.png');
+        }
+
+        .right:hover{
+          background-image: url('../assets/gas/timeline_righth.png');
+        }
       }
 
       .electricitystats {
@@ -262,6 +340,22 @@ body{
         }
         .selector div{
           background-color: #002E36;
+        }
+
+        .left{
+          background-image: url('../assets/electricity/timeline_left.png');
+        }
+
+        .left:hover{
+          background-image: url('../assets/electricity/timeline_lefth.png');
+        }
+
+        .right{
+          background-image: url('../assets/electricity/timeline_right.png');
+        }
+
+        .right:hover{
+          background-image: url('../assets/electricity/timeline_righth.png');
         }
       }
 
@@ -316,8 +410,8 @@ body{
           margin-right: auto;
           .graph_add_info{
             position: absolute;
-            left: 800px;
-            width: 80px;
+            left: 0px;
+            width: 140px;
             height: 80px;
             ul{
               width: 100%;
@@ -337,15 +431,16 @@ body{
           }
         }
 
-        ul{
+        .yearnav{
           z-index: 30;
           position: absolute;
           font-size: 20pt;
           list-style: none;
           li{
             display: inline-block;
-            margin-right: 80px;
-            width: 110px;
+            margin-right: 95px;
+            margin-left: 9px;
+            width: 80px;
             height: 32px;
             line-height: 35px;
 
@@ -356,7 +451,10 @@ body{
               width: 60px;
               margin-left: 11px;
               padding-left: 9px;
-              padding-right: 9px;
+            }
+
+            .year:hover{
+              color: #fff;
             }
           }
           .current{
@@ -383,6 +481,14 @@ body{
             display: inline-block;
             width: 79px;
             height: 35px;
+          }
+          .left, .right{
+            width: 8px;
+            height: 35px;
+            z-index: 1000;
+            position: absolute;
+            cursor: pointer;
+            background-repeat: no-repeat;
           }
         }
       }

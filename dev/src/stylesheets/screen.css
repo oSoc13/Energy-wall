@@ -152,7 +152,7 @@ body header #presentation_mode #content {
   padding-top: 17px;
 }
 /* line 78, ../sass/screen.scss */
-body header #presentation_mode #content h4 {
+body header #presentation_mode #content p {
   width: 100%;
   color: #48a9c2;
   text-align: center;

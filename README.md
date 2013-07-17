@@ -3,7 +3,7 @@ Essent Customer Data Visualisation
 
 ### Authors
 
-[Bastiaan Andriessen](https://github.com/BastiaanAndriessen "Bastiaan Andriessen") and 
+[Bastiaan Andriessen](https://github.com/BastiaanAndriessen "Bastiaan Andriessen") and
 [The oSoc'13 Team](https://github.com/oSoc13 "oSoc'13 Team")
 
 ### General Description:
@@ -20,5 +20,6 @@ License: [AGPL3](http://www.gnu.org/licenses/agpl-3.0.html "AGPL3")
 ### Requirements
 
 To open this project, some requirements are needed and are listed down here.
-*   jQuery: [Download here](http://jquery.com/download/ "Download jquery")
-*   Compass: [Download and install here](http://compass-style.org/ "Download and install compass"")
+*   jQuery: [Download here](http://jquery.com/download/ "Download jQuery")
+*   jCanvas: [Download here](http://calebevans.me/projects/jcanvas/ "Download jCanvas")
+*   Compass: [Download and install here](http://compass-style.org/ "Download and install Compass"")

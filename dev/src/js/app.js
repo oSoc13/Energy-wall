@@ -1,4 +1,5 @@
-$('document').ready(init);
+
+
 //ELS = ELEMENTS
 
 dataElDefaultHeight = 224;
@@ -62,7 +63,8 @@ elToRotate = '';
 step = 0;
 total = 0;
 
-//Init Setup
+//Init Setup, check if document is successfully been loaded
+$('document').ready(init);
 function init()
 {
     //set timers
@@ -111,16 +113,17 @@ function loadYear(yearindex){
                 $('.gas').first().find('.loading p').text('Loading some awesome client data.');
                 numPoints = 1
             }
-        }, 400);//Loading some awesome client data.
+        }, 400);
     }
 
+    //Sending request to receive user data
     var url = dataTankUrl+yearsToLoad[yearindex]+'.json';
     $.ajax({
         dataType: "json",
         type:'GET',
         url:url,
         success: function(clientsdata){
-            //parsedData = $.parseJSON(clientsdata);
+            //processing vars
             var yearEls = clientsdata[yearsToLoad[yearindex]];
             numTotalUsers = 0;
 
@@ -135,6 +138,8 @@ function loadYear(yearindex){
             numElectricitySocialUsers = 0;
             numElectricityGroupUsers = 0;
             numElectricitySolarUsers = 0;
+
+            //collect and structurize data in arrays
             $.each(yearEls, function(key){
                 numTotalUsers++;
                 if(yearEls[key]['gas_verbruik'] != 'null' && yearEls[key]['gas_verbruik'] != ''){
@@ -206,6 +211,7 @@ function loadYear(yearindex){
             generalYearElectricityData = [averageElectricityConsumption, minimumElectricityConsumption, maximumElectricityConsumption, percentOV, percentGasContract, percentElectricityContract, percentElectricitySocial, percentElectricityGroup, percentElectricitySolar];
             yearElectricityConsumptionData.push(generalYearElectricityData);
 
+            //check status of loading process
             if(yearindex < yearsToLoad.length-1){
                 loadYear(yearindex+1);
             }else{
@@ -220,6 +226,7 @@ function loadYear(yearindex){
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
+            //show failed load error
             currentOpenedEl.find('.loading p').text('Failed to load resource '+(yearindex+1)+'/'+yearsToLoad.length+'. Retry in 5 seconds');
             secondsLeft = 4;
             retryTimer = setInterval(function(){
@@ -258,11 +265,16 @@ function hoverOutPresentationMode(e){
     });
 }
 
+//Toggle presentation mode functions
 function presModeOn(e){
+    //stop default browser action of anchor click
     e.preventDefault();
+
+    //change presentation mode button visualisation
     $(this).addClass('selected');
     $(this).next().removeClass('selected');
     isPresentationModeOn = true;
+    //reset year vars & timers
     reset();
 
     if(isOpen){
@@ -293,11 +305,13 @@ function presModeOn(e){
 }
 
 function presModeOff(e){
+    //stop default browser action of anchor click
     e.preventDefault();
-    //set button
+    //change presentation mode button visualisation
     $(this).addClass('selected');
     $(this).prev().removeClass('selected');
 
+    //reassure new current year
     $(currentOpenedEl).find('.current').removeClass('current');
     $(currentOpenedEl).find('.'+currentYear).addClass('current');
 
@@ -357,6 +371,7 @@ function hoverOutHeader(e){
 
 //load html-data (data elements gas & electricity) from server
 function getHtmlDataForPresentationItems(){
+    //if already loaded, don't reload
     if(gasHtml != '' && electricityHtml != ''){
         generateOrderList(0);
     } else {
@@ -395,6 +410,7 @@ function generateOrderList(numElsToMake){
     //generating the elements
     if(numElementsToGenerate > 0){
         numGeneratedEls = numGeneratedEls + numElementsToGenerate;
+        numElsAlreadyAdded = 0;
         for(var i = 1; i<=numElementsToGenerate; i++){
             if(lastElementAdded == '' || lastElementAdded == 'electricity'){
                 $('#data_elements').append(gasHtml);
@@ -405,6 +421,12 @@ function generateOrderList(numElsToMake){
                 dataEls.push(electricityHtml);
                 lastElementAdded = 'electricity';
             }
+            if(firstLoadEls){
+                $('#data_elements section').last().css('opacity','0').delay(numElsAlreadyAdded*200).animate({
+                   opacity: 1
+                }, 1000);
+            }
+            numElsAlreadyAdded++;
         }
     }
     //reposition open buttons
@@ -498,6 +520,7 @@ function hoverOutElectricityWhileOpen(e){
     }
 }
 
+//click functions -> if a dataelement (gas or electricity) is being clicked while another one is open
 function selectOpenGasElement(e){
     currentSelected = 'gas';
     currentOpenedEl = $(this);
@@ -545,6 +568,8 @@ function selectOpenElement(){
     allowBindEvents = false;
     generateOrderList(elementsToRemove+2);
 
+    //animate full list to top, then remove the data elements above and reposition the full list to its
+    //original position
     $('#data_elements').animate({
        marginTop: newMarginTop
     }, 1000, function(){
@@ -557,8 +582,9 @@ function selectOpenElement(){
     });
 }
 
+//dynamical function called from everywhere to open an element
 function openElement(){
-
+    //animate the backgrounds and height from the divs
     newHeight = 834 + 30;
     currentOpenedEl.find('.gas_content').animate({
         paddingTop: '40px'
@@ -570,15 +596,18 @@ function openElement(){
         'background-position-y': '100%',
         'background-position-x': '50%'
     }, 500, function(e){
+            //bind hover and click events on bottom buttons
             if(currentSelected == 'gas'){
                 currentOpenedEl.find('div').last().on('mouseenter', hoverOverGasWhileOpen).on('mouseleave', hoverOutGasWhileOpen).on('click',closeDataEl).prev().on('mouseenter', hoverOverGasWhileOpen).on('mouseleave', hoverOutGasWhileOpen).on('click',closeDataEl);
             }else{
                 currentOpenedEl.find('div').last().on('mouseenter', hoverOverElectricityWhileOpen).on('mouseleave', hoverOutElectricityWhileOpen).on('click',closeDataEl).prev().on('mouseenter', hoverOverElectricityWhileOpen).on('mouseleave', hoverOutElectricityWhileOpen).on('click',closeDataEl);
             }
+            //bind hover and click events on other gas/electricity elements
             $('.gas').unbind().on('mouseenter',hoverOverGas).on('mouseleave', hoverOutGas).on('click', selectOpenGasElement);
             $('.electricity').unbind().on('mouseenter',hoverOverElectricity).on('mouseleave', hoverOutElectricity).on('click', selectOpenElectricityElement);
             currentOpenedEl.unbind();
 
+            //hide arrow year indicator
             $('.selector').find('a').first().hide();
 
             //show data visualisation
@@ -607,6 +636,7 @@ function bindArrowNavigationEvents(){
     currentOpenedEl.find('.year').unbind().on('click', changeYearByClick);
 }
 
+//arrow year indicator events
 function showPreviousYear(e){
     e.preventDefault();
     currentIndex--;
@@ -621,13 +651,16 @@ function showNextYear(e){
     changeYear(currentOpenedEl.find('.'+currentYear).find('a'));
 }
 
+//event executed when clicking on a certain year
 function changeYearByClick(e){
     e.preventDefault();
     yearClicked = $(this);
     changeYear(yearClicked);
 }
 
+//general function executed when the years gets changed by user interaction
 function changeYear(yearClicked){
+    //animating the presentation mode panel so the user knows the presentation mode is put off
     if(isPresentationModeOn){
         $('#presentation_mode').animate({
                     marginLeft: 0
@@ -654,7 +687,10 @@ function changeYear(yearClicked){
            marginLeft: '0%'
     },{ duration: 500, queue: false });
 
+    //reset year vars and timers
     reset();
+
+    //redefine currentYear and currentIndex
     currentYear = yearClicked.parent().attr('class').split(' ')[0];
     for(var i = 0; i<yearsToLoad.length; i++){
         if(yearsToLoad[i] == currentYear){
@@ -675,7 +711,7 @@ function changeYear(yearClicked){
     }
     bindArrowNavigationEvents();
 
-
+    //update the graph and current year
     delayTimer = setInterval(function(){
         clearInterval(delayTimer);
         currentOpenedEl.find('.yearnav .current').removeClass('current');
@@ -714,6 +750,7 @@ function startCountdown(){
     },secondsUntilClose*1000,'linear');
 }
 
+//functions called from general openElement function
 function openGasElement(){
     currentOpenedEl.find('div').first().css('background',"url(assets/gas/flames.png) no-repeat, url(assets/textures/gas.jpg) repeat").css('background-position','50%px 100%, 0px 0px');
     if(isPresentationModeOn){
@@ -840,6 +877,7 @@ function closeDataEl(){
     });
 }
 
+//general reset function called from anywhere to reset the general options
 function reset(){
     if(currentOpenedEl != ''){
         currentOpenedEl.find('gas_status_bar_update').stop();
@@ -858,6 +896,7 @@ function reset(){
     yearSecondsPassed = 0;
 }
 
+//opens the next data element
 function openNextEl(){
     reset();
     if(currentSelected == 'gas'){
@@ -873,6 +912,7 @@ function openNextEl(){
 
 //All canvas (graph) shizzle
 function loadCanvas(){
+    //delete all current drawings
     $(currentOpenedEl).find("#graph_canvas").clearCanvas();
 
     canvasWidth = $('#graph_canvas').get(0).width;
@@ -965,7 +1005,7 @@ function loadCanvas(){
 }
 
 function drawCircleData(){
-    //detect energy kind
+    //detect energy kind and adjust settings for each
     color = '';
     dataPointUrl = '';
     arrConsumptionData = '';
@@ -981,6 +1021,7 @@ function drawCircleData(){
         currentOpenedEl.find('.solar').removeClass('hide');
     }
 
+    //save context in array for each arc to be drawn
     arrCanvases = currentOpenedEl.find('.circle_param canvas');
     arrContexts = [];
     for(var u = 0; u<arrCanvases.length; u++){
@@ -988,6 +1029,7 @@ function drawCircleData(){
         arrContexts.push(context);
     }
 
+    //calculating and drawing each arc
     for(var p = 3; p<arrConsumptionData[currentIndex].length; p++){
         canvas = arrCanvases[p-3];
         context = arrContexts[p-3];
@@ -1032,7 +1074,9 @@ function drawCircleData(){
     }
 }
 
+//drawing the textinfo on the graph
 function drawGraphAdditionalInfo(){
+    //draw the info above or under the current selected datapoint
     additionalInfoPosVert = 'up';
     if($("#graph_canvas").getLayer('datapointselected').y > canvasHeight/2){
         additionalInfoPosVert = 'up';
@@ -1040,6 +1084,7 @@ function drawGraphAdditionalInfo(){
         additionalInfoPosVert = 'down';
     }
 
+    //drawing process
     if(additionalInfoPosVert == 'up'){
         for(var l = 0; l<3; l++){
             $('#graph_canvas').drawImage({
@@ -1073,6 +1118,7 @@ function drawGraphAdditionalInfo(){
         currentOpenedEl.find('.graph_add_info').css('left', $("#graph_canvas").position().left + $("#graph_canvas").getLayer('dataspec1').x + 18)
                 .css('top', $("#graph_canvas").position().top + $("#graph_canvas").getLayer('dataspec2').y - 2).fadeIn(700);
     }
+    //update general data vars
     averageCurrentYear = yearGasConsumptionData[currentIndex][0];
     minimumCurrentYear = yearGasConsumptionData[currentIndex][1];
     maximumCurrentYear = yearGasConsumptionData[currentIndex][2];
@@ -1110,6 +1156,7 @@ function updateDataPointSelected(){
         drawGraphAdditionalInfo();
     });
 
+    //update circle data after the drawing process
     drawCircleData();
 }
 

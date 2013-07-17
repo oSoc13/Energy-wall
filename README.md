@@ -3,7 +3,7 @@ Essent Customer Data Visualisation
 
 ### Authors
 
-[Bastiaan Andriessen](https://github.com/BastiaanAndriessen "Bastiaan Andriessen")
+[Bastiaan Andriessen](https://github.com/BastiaanAndriessen "Bastiaan Andriessen") and 
 [The oSoc'13 Team](https://github.com/oSoc13 "oSoc'13 Team")
 
 ### General Description:

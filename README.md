@@ -22,4 +22,5 @@ License: [AGPL3](http://www.gnu.org/licenses/agpl-3.0.html "AGPL3")
 To open this project, some requirements are needed and are listed down here.
 *   jQuery: [Download here](http://jquery.com/download/ "Download jQuery")
 *   jCanvas: [Download here](http://calebevans.me/projects/jcanvas/ "Download jCanvas")
-*   Compass: [Download and install here](http://compass-style.org/ "Download and install Compass"")
+*   Compass: [Download and install here](http://compass-style.org/ "Download and install Compass")
+*   jQuery Cookie: [Download here](https://github.com/carhartl/jquery-cookie/ "Download jQuery Cookie")

@@ -34,6 +34,7 @@
 }
 $header_height: 134px;
 $yearbutton_width: 8px;
+$fullscreenbutton_height: 48px;
 
 .order{
   visibility: hidden;
@@ -155,6 +156,34 @@ body{
         }
       }
     }
+
+    .fullscreen{
+      position: absolute;
+      top: 30%;
+      left: 95%;
+      width: $fullscreenbutton_height;
+      height: $fullscreenbutton_height;
+
+      span{
+        display: none;
+      }
+    }
+
+    .open{
+      background-image: url('../assets/fullscreen/open.png');
+    }
+
+    .open:hover{
+      background-image: url('../assets/fullscreen/openh.png');
+    }
+
+    .close{
+      background-image: url('../assets/fullscreen/close.png');
+    }
+
+    .close:hover{
+      background-image: url('../assets/fullscreen/closeh.png');
+    }
   }
 
   #disabled{
@@ -221,6 +250,7 @@ body{
 
   #data_elements{
     margin-top: 133px;
+
   }
 
   .gas, .electricity{
@@ -250,7 +280,7 @@ body{
       padding-left: 45px;
     }
     .gas_content, .electricity_content{
-      background-position: 50% 100%, 0px 0px;
+      background-position: center bottom, 0px 0px;
       cursor: pointer;
       height: 143px;
       padding-top: 70px;
@@ -369,9 +399,10 @@ body{
           height: 150px;
           margin: 20px auto 55px auto;
           .circle_param{
-            width: 130px;
-            margin-right: 50px;
+            width: 150px;
+            margin-right: 20px;
             float: left;
+
             span{
               position: absolute;
               width: 130px;

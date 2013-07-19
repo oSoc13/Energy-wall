@@ -1197,10 +1197,17 @@ function drawGraphAdditionalInfo(){
                 .css('top', $("#graph_canvas").position().top + $("#graph_canvas").getLayer('dataspec2').y - 2).fadeIn(700);
     }
     //update general data vars
-    averageCurrentYear = yearGasConsumptionData[currentIndex][0];
-    minimumCurrentYear = yearGasConsumptionData[currentIndex][1];
-    maximumCurrentYear = yearGasConsumptionData[currentIndex][2];
-    currentOpenedEl.find('.value_average').text('Avg: '+averageCurrentYear).next().text('Min: '+minimumCurrentYear).next().text('Max: '+maximumCurrentYear);
+    if(currentSelected == 'gas'){
+        averageCurrentYear = yearGasConsumptionData[currentIndex][0];
+        minimumCurrentYear = yearGasConsumptionData[currentIndex][1];
+        maximumCurrentYear = yearGasConsumptionData[currentIndex][2];
+        currentOpenedEl.find('.value_average').text('Avg: '+averageCurrentYear).next().text('Min: '+minimumCurrentYear).next().text('Max: '+maximumCurrentYear);
+    } else {
+        averageCurrentYear = yearElectricityConsumptionData[currentIndex][0];
+        minimumCurrentYear = yearElectricityConsumptionData[currentIndex][1];
+        maximumCurrentYear = yearElectricityConsumptionData[currentIndex][2];
+        currentOpenedEl.find('.value_average').text('Avg: '+averageCurrentYear).next().text('Min: '+minimumCurrentYear).next().text('Max: '+maximumCurrentYear);
+    }
 }
 
 function updateDataPointSelected(){
